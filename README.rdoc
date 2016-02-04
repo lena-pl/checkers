@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/lena-pl/checkers.svg)](https://travis-ci.org/lena-pl/checkers)
+
 # Checkers (English Draughts)
 
 A Ruby on Rails version of the strategy board game checkers.

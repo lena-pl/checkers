@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/lena-pl/checkers.svg)](https://travis-ci.org/lena-pl/checkers)
+[![Coverage Status](https://coveralls.io/repos/lena-pl/checkers/badge.svg?branch=master&service=github)](https://coveralls.io/github/lena-pl/checkers?branch=master)
+
 # Checkers (English Draughts)
 
 A Ruby on Rails version of the strategy board game checkers.

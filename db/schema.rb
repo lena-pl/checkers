@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20160204223027) do
   end
 
   create_table "players", force: :cascade do |t|
+    t.integer  "colour",     null: false
     t.integer  "game_id",    null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

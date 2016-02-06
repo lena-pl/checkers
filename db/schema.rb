@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20160204223027) do
   add_index "players", ["game_id"], name: "index_players_on_game_id"
 
   create_table "steps", force: :cascade do |t|
+    t.integer  "from",       null: false
+    t.integer  "to",         null: false
     t.integer  "kind",       null: false
     t.integer  "player_id",  null: false
     t.datetime "created_at", null: false

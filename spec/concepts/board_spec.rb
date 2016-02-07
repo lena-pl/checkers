@@ -12,4 +12,16 @@ RSpec.describe Board do
       expect(subject.occupied).to eql [square_one, square_two]
     end
   end
+
+  describe "#active_red_pieces_count" do
+    it "returns the count of red pieces on the board" do
+      expect(subject.active_red_pieces_count).to eql 1
+    end
+  end
+
+  describe "#active_red_pieces_count" do
+    it "returns the count of white pieces on the board" do
+      expect(subject.active_white_pieces_count).to eql 1
+    end
+  end
 end

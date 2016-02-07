@@ -1,17 +1,21 @@
 class Board
-  def initialize(occupied_positions)
-    @occupied_positions = occupied_positions
+  def initialize(squares)
+    @squares = squares.flatten
   end
 
+  Square = Struct.new(:position, :player_colour)
+
   def occupied
-    Hash[*@occupied_positions.flatten]
+    @squares.in_groups_of(2).map do |position, player_colour|
+      Square.new(position, player_colour)
+    end
   end
 
   def active_red_pieces_count
-    @occupied_positions.count{|pos| pos[1] == "red"}
+    occupied.count {|square| square.player_colour == "red"}
   end
 
   def active_white_pieces_count
-    @occupied_positions.count{|pos| pos[1] == "white"}
+    occupied.count {|square| square.player_colour == "white"}
   end
 end

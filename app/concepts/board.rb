@@ -11,11 +11,7 @@ class Board
     end
   end
 
-  def active_red_pieces_count
-    occupied.count {|square| square.player_colour == "red"}
-  end
-
-  def active_white_pieces_count
-    occupied.count {|square| square.player_colour == "white"}
+  def active_pieces_count(player)
+    occupied.count {|square| square.player_colour == player.colour}
   end
 end

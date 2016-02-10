@@ -5,4 +5,5 @@ class Player < ActiveRecord::Base
   enum colour: [:red, :white]
 
   validates :game, presence: true
+  validates :colour, uniqueness: { scope: :game }
 end

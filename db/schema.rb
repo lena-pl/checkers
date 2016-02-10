@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20160204223027) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "players", ["game_id", "colour"], name: "index_players_on_game_id_and_colour", unique: true
   add_index "players", ["game_id"], name: "index_players_on_game_id"
 
   create_table "steps", force: :cascade do |t|

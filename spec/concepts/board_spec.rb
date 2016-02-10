@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Board do
-  let(:squares) { [[1, "red"], [2, "red"], [3, "red"], [4, "red"]] }
+  let(:squares) { [[1, "red"], [2, "red"], [3, "red"], [4, "red"], [5, "red"], [6, "red"], [7, "red"], [8, "red"]] }
   subject { Board.new(squares) }
   let(:game) { Game.create! }
   let(:player_one) { game.players.create!(colour: :red) }
@@ -18,7 +18,16 @@ RSpec.describe Board do
       dud_four = Board::Square.new(nil, [7,8], "dud")
       square_four = Board::Square.new(squares[3][0], [8,8], squares[3][1])
 
-      expect(subject.cartesian_layout).to eql [dud_one, square_one, dud_two, square_two, dud_three, square_three, dud_four, square_four]
+      square_five = Board::Square.new(squares[4][0], [1,7], squares[4][1])
+      dud_five = Board::Square.new(nil, [2,7], "dud")
+      square_six = Board::Square.new(squares[5][0], [3,7], squares[5][1])
+      dud_six = Board::Square.new(nil, [4,7], "dud")
+      square_seven = Board::Square.new(squares[6][0], [5,7], squares[6][1])
+      dud_seven = Board::Square.new(nil, [6,7], "dud")
+      square_eight = Board::Square.new(squares[7][0], [7,7], squares[7][1])
+      dud_eight = Board::Square.new(nil, [8,7], "dud")
+
+      expect(subject.cartesian_layout).to eql [dud_one, square_one, dud_two, square_two, dud_three, square_three, dud_four, square_four, square_five, dud_five, square_six, dud_six, square_seven, dud_seven, square_eight, dud_eight]
     end
   end
 

@@ -28,6 +28,14 @@ class Board
     cartesian_layout.find { |square| square.position == pos }
   end
 
+  def x_coord(square)
+    square.coordinates[0]
+  end
+
+  def y_coord(square)
+    square.coordinates[1]
+  end
+
   private
 
   def rows_with_duds

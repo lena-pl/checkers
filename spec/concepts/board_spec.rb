@@ -46,4 +46,20 @@ RSpec.describe Board do
       expect(subject.square_by_position(4)).to eq square_four
     end
   end
+
+  describe "#x_coord" do
+    it "returns the x coordinate of a given square on the board" do
+      square_one = Board::Square.new(squares[0][0], [2,8], squares[0][1])
+
+      expect(subject.x_coord(square_one)).to eq 2
+    end
+  end
+
+  describe "#y_coord" do
+    it "returns the y coordinate of a given square on the board" do
+      square_six = Board::Square.new(squares[5][0], [3,7], squares[5][1])
+
+      expect(subject.y_coord(square_six)).to eq 7
+    end
+  end
 end

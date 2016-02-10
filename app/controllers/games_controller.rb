@@ -4,9 +4,11 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.create!
-    @game.players.create!(colour: :red)
-    @game.players.create!(colour: :white)
+    Game.transaction do
+      @game = Game.create!
+      @game.players.create!(colour: :red)
+      @game.players.create!(colour: :white)
+    end
 
     redirect_to @game
   end

@@ -10,18 +10,9 @@ class ApplyStep
   end
 
   def call
-    puts "I am applying the step"
     if rules_pass?(@step.kind)
-      puts "APPLY STEP RULES PASS"
-      puts "original to_square occupant: #{@to_square.occupant}"
-      puts "original from_square occupant: #{@from_square.occupant}"
-
       @to_square.occupant = @from_square.occupant
-      puts "new to_square occupant: #{@to_square.occupant}"
       @from_square.occupant = "empty"
-      puts "new from_square occupant: #{@from_square.occupant}"
-
-      puts "==========="
 
       capture_piece if @step.kind == "jump"
     end

@@ -9,10 +9,6 @@ class BuildGameState
       service = TakeTurn.new(game_state: current_game_state, player_colour: player_steps[0], steps: player_steps[1])
       service.call
 
-      puts "BUILD GAME STATE LOOP"
-      puts "CURRENT CHUNK: #{player_steps}"
-      puts "++++++++++++++++++++++++++++++"
-
       @errors + service.errors
       service.game_state
     end

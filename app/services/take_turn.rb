@@ -13,11 +13,6 @@ class TakeTurn
     if player_allowed_to_move?
       @board = apply_steps
 
-      puts "TAKE TURN"
-      puts "last step id: #{@steps.last.id}"
-      puts "last step kind: #{@steps.last.kind}"
-      puts "========="
-
       @errors.push "You must make all available jumps to complete your turn" if @steps.last.kind == "jump" && more_pieces_can_be_captured?
       find_next_player if @errors.empty?
     else
@@ -50,15 +45,9 @@ class TakeTurn
     original_x = @board.x_coord(final_destination_square)
     original_y = @board.y_coord(final_destination_square)
 
-    puts "NEW CHECK"
-    puts "player colour: #{@player.colour}"
-    puts "destination square: #{final_destination_square}"
     potential_enemy_square_y = change_y_coord(original_y)
     left_square = @board.square_by_coordinates(original_x - 1, potential_enemy_square_y)
-    puts "left square: #{left_square}"
     right_square = @board.square_by_coordinates(original_x + 1, potential_enemy_square_y)
-    puts "right square: #{right_square}"
-    puts "=========="
 
     left_square_has_jumpable_enemy(left_square, enemy_colour, potential_enemy_square_y) || right_square_has_jumpable_enemy(right_square, enemy_colour, potential_enemy_square_y)
   end

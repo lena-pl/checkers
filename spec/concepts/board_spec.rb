@@ -1,65 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe Board do
-  let(:squares) { [[1, "red"], [2, "red"], [3, "red"], [4, "red"], [5, "red"], [6, "red"], [7, "red"], [8, "red"]] }
+  let(:squares) { [[1, "red"], [2, "red"], [3, "red"], [4, "red"], [5, "red"], [6, "red"], [7, "red"], [8, "red"], [9, "red"], [10, "red"], [11, "red"], [12, "red"], [13, "empty"], [14, "empty"], [15, "empty"], [16, "empty"], [17, "empty"], [18, "empty"], [19, "empty"], [20, "empty"], [21, "white"], [22, "white"], [23, "white"], [24, "white"], [25, "white"], [26, "white"], [27, "white"], [28, "white"], [29, "white"], [30, "white"], [31, "white"], [32, "white"]] }
   subject { Board.new(squares) }
   let(:game) { Game.create! }
   let(:player_one) { game.players.create!(colour: :red) }
   let(:player_two) { game.players.create!(colour: :white) }
 
-  describe "#cartesian_layout" do
+  describe "#graphed_layout" do
     it "returns an array of square structs with correct positions, coordinates and occupants" do
-      dud_one = Board::Square.new(nil, [1,8], "dud")
-      square_one = Board::Square.new(squares[0][0], [2,8], squares[0][1])
-      dud_two = Board::Square.new(nil, [3,8], "dud")
-      square_two = Board::Square.new(squares[1][0], [4,8], squares[1][1])
-      dud_three = Board::Square.new(nil, [5,8], "dud")
-      square_three = Board::Square.new(squares[2][0], [6,8], squares[2][1])
-      dud_four = Board::Square.new(nil, [7,8], "dud")
-      square_four = Board::Square.new(squares[3][0], [8,8], squares[3][1])
-
-      square_five = Board::Square.new(squares[4][0], [1,7], squares[4][1])
-      dud_five = Board::Square.new(nil, [2,7], "dud")
-      square_six = Board::Square.new(squares[5][0], [3,7], squares[5][1])
-      dud_six = Board::Square.new(nil, [4,7], "dud")
-      square_seven = Board::Square.new(squares[6][0], [5,7], squares[6][1])
-      dud_seven = Board::Square.new(nil, [6,7], "dud")
-      square_eight = Board::Square.new(squares[7][0], [7,7], squares[7][1])
-      dud_eight = Board::Square.new(nil, [8,7], "dud")
-
-      expect(subject.cartesian_layout).to eql [dud_one, square_one, dud_two, square_two, dud_three, square_three, dud_four, square_four, square_five, dud_five, square_six, dud_six, square_seven, dud_seven, square_eight, dud_eight]
-    end
-  end
-
-  describe "#square_by_coordinates" do
-    it "returns the correct square, given a set of cartesian coordinates" do
-      square_four = Board::Square.new(squares[3][0], [8,8],  squares[3][1])
-
-      expect(subject.square_by_coordinates(8,8)).to eq square_four
+      expect(subject.graphed_layout).to eql [Board::Square.new(1, "red", [5, 6]), Board::Square.new(2, "red", [6, 7]), Board::Square.new(3, "red", [7, 8]), Board::Square.new(4, "red", [8]), Board::Square.new(5, "red", [1, 9]), Board::Square.new(6, "red", [1, 2, 9, 10]), Board::Square.new(7, "red", [2, 3, 10, 11]), Board::Square.new(8, "red", [3, 4, 11, 12]), Board::Square.new(9, "red", [5, 6, 13, 14]), Board::Square.new(10, "red", [6, 7, 14, 15]), Board::Square.new(11, "red", [7, 8, 15, 16]), Board::Square.new(12, "red", [8, 16]), Board::Square.new(13, "empty", [9, 17]), Board::Square.new(14, "empty", [9, 10, 17, 18]), Board::Square.new(15, "empty", [10, 11, 18, 19]), Board::Square.new(16, "empty", [11, 12, 19, 20]), Board::Square.new(17, "empty", [13, 14, 21, 22]), Board::Square.new(18, "empty", [14, 15, 22, 23]), Board::Square.new(19, "empty", [15, 16, 23, 24]), Board::Square.new(20, "empty", [16, 24]), Board::Square.new(21, "white", [17, 25]), Board::Square.new(22, "white", [17, 18, 25, 26]), Board::Square.new(23, "white", [18, 19, 26, 27]), Board::Square.new(24, "white", [19, 20, 27, 28]), Board::Square.new(25, "white", [21, 22, 29, 30]), Board::Square.new(26, "white", [22, 23, 30, 31]), Board::Square.new(27, "white", [23, 24, 31, 32]), Board::Square.new(28, "white", [24, 32]), Board::Square.new(29, "white", [25]), Board::Square.new(30, "white", [25, 26]), Board::Square.new(31, "white", [26, 27]), Board::Square.new(32, "white", [27, 28])]
     end
   end
 
   describe "#square_by_position" do
     it "returns the correct square, given a checker board position" do
-      square_four = Board::Square.new(squares[3][0], [8,8],  squares[3][1])
+      square_four = Board::Square.new(squares[3][0], squares[3][1], [8])
 
       expect(subject.square_by_position(4)).to eq square_four
-    end
-  end
-
-  describe "#x_coord" do
-    it "returns the x coordinate of a given square on the board" do
-      square_one = Board::Square.new(squares[0][0], [2,8], squares[0][1])
-
-      expect(subject.x_coord(square_one)).to eq 2
-    end
-  end
-
-  describe "#y_coord" do
-    it "returns the y coordinate of a given square on the board" do
-      square_six = Board::Square.new(squares[5][0], [3,7], squares[5][1])
-
-      expect(subject.y_coord(square_six)).to eq 7
     end
   end
 end

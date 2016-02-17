@@ -1,6 +1,6 @@
 class GameState
-  attr_reader :board, :game
-  attr_accessor :current_player
+  attr_reader :game
+  attr_accessor :current_player, :board
 
   def initialize(game, board, current_player)
     @game = game
@@ -45,7 +45,7 @@ class GameState
   end
 
   def active_pieces_count(player)
-    @board.cartesian_layout.count {|square| square.occupant == player.colour}
+    @board.graphed_layout.count {|square| square.occupant == player.colour}
   end
 
   def legal_moves_left_for_player?(player)

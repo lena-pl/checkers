@@ -10,65 +10,98 @@ class ApplyStep
   end
 
   def call
-    if rules_pass?(@step.kind)
+    puts "******************"
+    puts "APPLY STEP HAS BEEN CALLED"
+    puts "from_square: #{@from_square.inspect}"
+    puts "to_square: #{@to_square.inspect}"
+    if rules_pass?
+      puts "APPLY STEP RULES PASS"
+      puts "from_square position: #{@from_square.position} | old from_square occupant: #{@from_square.occupant}"
+      puts "to_square position: #{@to_square.position} | old to_square occupant: #{@to_square.occupant}"
+
       @to_square.occupant = @from_square.occupant
       @from_square.occupant = "empty"
 
       capture_piece if @step.kind == "jump"
     end
 
+    puts "BOARD SHOULD HAVE BEEN UPDATED NOW"
+    puts "from_square position: #{@from_square.position} | new from_square occupant: #{@board.square_by_position(@step.from).occupant}"
+    puts "to_square position: #{@to_square.position} | new to_square occupant: #{@board.square_by_position(@step.to).occupant}"
+    puts "BOARD UPDATE ENDS"
     @board
   end
 
   private
 
   def capture_piece
-    captured_x_coord_difference = (@board.x_coord(@from_square) - @board.x_coord(@to_square)) / 2
-    captured_y_coord_difference = (@board.y_coord(@from_square) - @board.y_coord(@to_square)) / 2
-
-    captured_x_coord = @board.x_coord(@from_square) + captured_x_coord_difference
-    captured_y_coord = @board.y_coord(@from_square) + captured_y_coord_difference
-
-    captured_piece = @board.square_by_coordinates(captured_x_coord, captured_y_coord)
+    captured_piece = shared_node(@from_square, @to_square)
 
     captured_piece.occupant = "empty"
   end
 
-  def rules_pass?(step_kind)
-    @errors.push "You can only move diagonally!" if !diagonal_move?
-    @errors.push "You can only move forward!" if !correct_direction?
-    @errors.push "You can't pass that amount of squares for this type of move!" if !correct_amount_of_squares_passed?(step_kind)
-
-    @errors.empty?
-  end
-
-  def diagonal_move?
-    number_of_cols_moved = (@board.x_coord(@from_square) - @board.x_coord(@to_square)).abs
-    number_of_rows_moved = (@board.y_coord(@from_square) - @board.y_coord(@to_square)).abs
-
-    number_of_rows_moved == number_of_cols_moved
-  end
-
-  def correct_amount_of_squares_passed?(step_kind)
-    number_of_cols_moved = (@board.x_coord(@from_square) - @board.x_coord(@to_square)).abs
-
-    if step_kind == "simple"
-      number_of_cols_moved == 1
-    elsif step_kind == "jump"
-      number_of_cols_moved == 2
+  def rules_pass?
+    case @step.kind
+    when "simple"
+      can_complete_simple_move?
+    when "jump"
+      can_complete_jump_move?
     else
       raise ArgumentError
     end
   end
 
-  def correct_direction?
-    row_difference = @board.y_coord(@from_square) - @board.y_coord(@to_square)
 
+  def can_complete_simple_move?
+    @errors.push "You can only move diagonally!" if !node_adjacent?(@from_square, @to_square)
+    @errors.push "You can only move forward!" if !correct_direction?
+    @errors.push "That square is occupied!" if !destination_empty?
+
+    @errors.empty?
+  end
+
+  def can_complete_jump_move?
+    @errors.push "You can only move forward!" if !correct_direction?
+    @errors.push "That is not a valid jump path!" if !valid_jump_path?(@from_square, @to_square)
+
+    @errors.empty?
+  end
+
+  def destination_empty?
+    @to_square.occupant == "empty"
+  end
+
+  def node_adjacent?(from, to)
+    from.connections.include? to.position
+  end
+
+  def valid_jump_path?(from, to)
+    shared_node(from, to).present? &&
+      shared_node(from, to).occupant == enemy_colour &&
+       to.occupant == "empty"
+  end
+
+  def shared_node(from, to)
+    @board.square_by_position((from.connections & to.connections).first)
+  end
+
+  def correct_direction?
     case @step.player.colour
     when "red"
-      row_difference > 0
+      @from_square.position < @to_square.position
     when "white"
-      row_difference < 0
+      @from_square.position > @to_square.position
+    else
+      raise ArgumentError
+    end
+  end
+
+  def enemy_colour
+    case @step.player.colour
+    when "red"
+      "white"
+    when "white"
+      "red"
     else
       raise ArgumentError
     end

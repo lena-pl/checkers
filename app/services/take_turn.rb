@@ -21,6 +21,10 @@ class TakeTurn
 
     @errors.uniq
 
+    @game_state.board = @board
+    puts "***********************************"
+    puts "TAKE TURN COMPLETE"
+
     @game_state
   end
 
@@ -40,52 +44,73 @@ class TakeTurn
     end
   end
 
+  def find_next_player
+    @game_state.current_player = @game_state.game.players.find { |player| player != @player }
+  end
+
   def more_pieces_can_be_captured?
-    final_destination_square = @board.square_by_position(@steps.last.to)
-    original_x = @board.x_coord(final_destination_square)
-    original_y = @board.y_coord(final_destination_square)
+    current_destination = @board.square_by_position(@steps.last.to)
+    enemies = adjacent_enemies(forward_facing_adjacent_nodes(current_destination))
 
-    potential_enemy_square_y = change_y_coord(original_y)
-    left_square = @board.square_by_coordinates(original_x - 1, potential_enemy_square_y)
-    right_square = @board.square_by_coordinates(original_x + 1, potential_enemy_square_y)
-
-    left_square_has_jumpable_enemy(left_square, enemy_colour, potential_enemy_square_y) || right_square_has_jumpable_enemy(right_square, enemy_colour, potential_enemy_square_y)
-  end
-
-  def left_square_has_jumpable_enemy(left_square, enemy_colour, potential_enemy_square_y)
-    if left_square == nil
-      false
-    elsif left_square.occupant == enemy_colour
-      potential_empty_square_y = change_y_coord(potential_enemy_square_y)
-      potential_empty_square = @board.square_by_coordinates(@board.x_coord(left_square) - 1, potential_empty_square_y)
-
-      potential_empty_square.occupant == "empty"
+    if enemies.present?
+      empty_destinations(enemies_with_directions(enemies, forward_facing_adjacent_nodes(current_destination))).present?
     else
       false
     end
   end
 
-  def right_square_has_jumpable_enemy(right_square, enemy_colour, potential_enemy_square_y)
-    if right_square == nil
-      false
-    elsif right_square.occupant == enemy_colour
-      potential_empty_square_y = change_y_coord(potential_enemy_square_y)
-      potential_empty_square = @board.square_by_coordinates(@board.x_coord(right_square) + 1, potential_empty_square_y)
+  def forward_facing_adjacent_nodes(square)
+    nodes = []
 
-      potential_empty_square.occupant == "empty"
-    else
-      false
-    end
-  end
-
-  def change_y_coord(y_coord)
     case @player.colour
     when "red"
-      y_coord -= 1
+      positions = square.connections.select { |connection| connection > square.position }
+      nodes = positions.map { |position| @board.square_by_position(position) }
     when "white"
-      y_coord += 1
+      positions = square.connections.select { |connection| connection < square.position }
+      nodes = positions.map { |position| @board.square_by_position(position) }
     else
       raise ArgumentError
+    end
+
+    nodes
+  end
+
+  def adjacent_enemies(squares)
+    squares.select { |square| square.occupant == enemy_colour }
+  end
+
+  def enemies_with_directions(enemies, forward_facing_nodes)
+    positions = forward_facing_nodes.map { |node| node.position }.sort
+
+    enemies.map do |enemy|
+      if enemy.position == positions.first
+        [enemy, "left"]
+      else
+        [enemy, "right"]
+      end
+    end
+  end
+
+  def empty_destinations(enemies_and_their_directions)
+    potential_destinations = enemies_and_their_directions.map do |enemy_direction_pair|
+      enemy = enemy_direction_pair[0]
+      direction = enemy_direction_pair[1]
+      nodes = forward_facing_adjacent_nodes(enemy)
+
+      in_horizontal_direction(direction, nodes)
+    end
+
+    potential_destinations.select { |square| square.occupant == "empty" }
+  end
+
+  def in_horizontal_direction(direction, nodes)
+    positions = nodes.map {|node| node.position}.sort
+
+    if direction == "right"
+      @board.square_by_position(positions.last)
+    else
+      @board.square_by_position(positions.first)
     end
   end
 
@@ -98,9 +123,5 @@ class TakeTurn
     else
       raise ArgumentError
     end
-  end
-
-  def find_next_player
-    @game_state.current_player = @game_state.game.players.find { |player| player != @player }
   end
 end

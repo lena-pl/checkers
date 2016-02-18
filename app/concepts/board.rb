@@ -11,11 +11,23 @@ class Board
     end
   end
 
-  def square_by_position(pos)
-    graphed_layout.find { |square| square.position == pos }
+  def square_occupant(position)
+    square_by_position(position).occupant
+  end
+
+  def move_piece(from_position, to_position)
+    from = square_by_position(from_position)
+    to = square_by_position(to_position)
+
+    to.occupant = from.occupant
+    from.occupant = empty
   end
 
   private
+
+  def square_by_position(pos)
+    graphed_layout.find { |square| square.position == pos }
+  end
 
   def squares_with_connections
     top_half_connected = @squares.zip(top_to_bottom_connections)

@@ -1,14 +1,9 @@
 class Board
+  attr_reader :layout
+
   def initialize(squares)
     @squares = squares
-  end
-
-  Square = Struct.new(:position, :occupant, :connections)
-
-  def graphed_layout
-    squares_with_connections.map do |position, occupant, connections|
-      Square.new(position, occupant, connections.sort)
-    end
+    @layout = original_layout
   end
 
   def square_occupant(position)
@@ -19,14 +14,29 @@ class Board
     from = square_by_position(from_position)
     to = square_by_position(to_position)
 
-    to.occupant = from.occupant
-    from.occupant = empty
+    @layout = original_layout.map do |square|
+      if square.position == to_position
+        square.occupant = from.occupant
+      elsif square.position == from_position
+        square.occupant = "empty"
+      end
+
+      square
+    end
   end
 
   private
 
+  Square = Struct.new(:position, :occupant, :connections)
+
+  def original_layout
+    squares_with_connections.map do |position, occupant, connections|
+      Square.new(position, occupant, connections.sort)
+    end
+  end
+
   def square_by_position(pos)
-    graphed_layout.find { |square| square.position == pos }
+    @layout.find { |square| square.position == pos }
   end
 
   def squares_with_connections

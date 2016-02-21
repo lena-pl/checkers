@@ -49,42 +49,36 @@ class TakeTurn
   end
 
   def more_pieces_can_be_captured?
-    current_destination = @board.square_by_position(@steps.last.to)
-    enemies = adjacent_enemies(forward_facing_adjacent_nodes(current_destination))
+    current_destination = @steps.last.to
+    enemies = adjacent_enemies(forward_facing_adjacent_node_positions(current_destination))
 
     if enemies.present?
-      empty_destinations(enemies_with_directions(enemies, forward_facing_adjacent_nodes(current_destination))).present?
+      empty_destinations(enemies_with_directions(enemies, forward_facing_adjacent_node_positions(current_destination))).present?
     else
       false
     end
   end
 
-  def forward_facing_adjacent_nodes(square)
-    nodes = []
-
+  def forward_facing_adjacent_node_positions(square_position)
     case @player.colour
     when "red"
-      positions = square.connections.select { |connection| connection > square.position }
-      nodes = positions.map { |position| @board.square_by_position(position) }
+      @board.square_connections(square_position).select { |connection| connection > square_position }
     when "white"
-      positions = square.connections.select { |connection| connection < square.position }
-      nodes = positions.map { |position| @board.square_by_position(position) }
+      @board.square_connections(square_position).select { |connection| connection < square_position }
     else
       raise ArgumentError
     end
-
-    nodes
   end
 
-  def adjacent_enemies(squares)
-    squares.select { |square| square.occupant == enemy_colour }
+  def adjacent_enemies(positions)
+    positions.select { |position| @board.square_occupant(position) == enemy_colour }
   end
 
-  def enemies_with_directions(enemies, forward_facing_nodes)
-    positions = forward_facing_nodes.map { |node| node.position }.sort
+  def enemies_with_directions(enemies, forward_facing_node_positions)
+    positions = forward_facing_node_positions.sort
 
     enemies.map do |enemy|
-      if enemy.position == positions.first
+      if enemy == positions.first
         [enemy, "left"]
       else
         [enemy, "right"]
@@ -96,21 +90,27 @@ class TakeTurn
     potential_destinations = enemies_and_their_directions.map do |enemy_direction_pair|
       enemy = enemy_direction_pair[0]
       direction = enemy_direction_pair[1]
-      nodes = forward_facing_adjacent_nodes(enemy)
+      positions = forward_facing_adjacent_node_positions(enemy)
 
-      in_horizontal_direction(direction, nodes)
+      in_horizontal_direction(direction, positions)
     end
 
-    potential_destinations.select { |square| square.occupant == "empty" }
+    potential_destinations.reject! { |destination| destination == nil }
+
+    if potential_destinations.present?
+      potential_destinations.select { |position| @board.square_occupant(position) == "empty" }
+    else
+      []
+    end
   end
 
-  def in_horizontal_direction(direction, nodes)
-    positions = nodes.map {|node| node.position}.sort
+  def in_horizontal_direction(direction, positions)
+    positions.sort
 
     if direction == "right"
-      @board.square_by_position(positions.last)
+      positions.last
     else
-      @board.square_by_position(positions.first)
+      positions.first
     end
   end
 

@@ -10,13 +10,27 @@ class Board
     square_by_position(position).occupant
   end
 
-  def move_piece(from_position, to_position)
-    from = square_by_position(from_position)
-    to = square_by_position(to_position)
+  def square_connections(position)
+    square_by_position(position).connections
+  end
 
-    @layout = original_layout.map do |square|
+  def capture_piece(position)
+    @layout.map do |square|
+      if square.position == position
+        square.occupant = "empty"
+      end
+
+      square
+    end
+  end
+
+  def move_piece(from_position, to_position)
+    from_square = square_by_position(from_position)
+    piece_colour = from_square.occupant
+
+    @layout.map do |square|
       if square.position == to_position
-        square.occupant = from.occupant
+        square.occupant = piece_colour
       elsif square.position == from_position
         square.occupant = "empty"
       end

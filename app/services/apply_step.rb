@@ -71,11 +71,6 @@ class ApplyStep
   end
 
   def enemy_colour
-    case @step.player.colour
-    when "red"
-      "white"
-    when "white"
-      "red"
-    end
+    @step.player.colour == "red" ? "white" : "red"
   end
 end

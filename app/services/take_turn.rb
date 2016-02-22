@@ -14,6 +14,7 @@ class TakeTurn
       @board = apply_steps
 
       @errors.push "You must make all available jumps to complete your turn" if @steps.last.kind == "jump" && more_pieces_can_be_captured?
+
       find_next_player if @errors.empty?
     else
       @errors.push "It's not your turn right now!"
@@ -36,7 +37,7 @@ class TakeTurn
       service = ApplyStep.new(current_board, step)
       service.call
 
-      @errors + service.errors
+      @errors += service.errors
       service.board
     end
   end

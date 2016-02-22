@@ -8,23 +8,12 @@ class ApplyStep
   end
 
   def call
-    puts "******************"
-    puts "APPLY STEP HAS BEEN CALLED"
-
     if rules_pass?
-      puts "APPLY STEP RULES PASS"
-      puts "from_square position: #{@step.from} | old from_square occupant: #{@board.square_occupant(@step.from)}"
-      puts "to_square position: #{@step.to} | old to_square occupant: #{@board.square_occupant(@step.to)}"
-
       @board.move_piece(@step.from, @step.to)
 
       @board.capture_piece(shared_piece_position(@step.from, @step.to)) if @step.kind == "jump"
     end
 
-    puts "BOARD SHOULD HAVE BEEN UPDATED NOW"
-    puts "from_square position: #{@step.from} | new from_square occupant: #{@board.square_occupant(@step.from)}"
-    puts "to_square position: #{@step.to} | new to_square occupant: #{@board.square_occupant(@step.to)}"
-    puts "BOARD UPDATE ENDS"
     @board
   end
 

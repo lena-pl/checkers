@@ -20,10 +20,7 @@ class TakeTurn
     end
 
     @errors.uniq
-
     @game_state.board = @board
-    puts "***********************************"
-    puts "TAKE TURN COMPLETE"
 
     @game_state
   end

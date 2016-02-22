@@ -1,4 +1,6 @@
 class BuildGameState
+  attr_reader :errors
+
   def initialize(game)
     @game = game
     @errors = []
@@ -8,10 +10,6 @@ class BuildGameState
     player_turns_and_colours.inject(base_state) do |current_game_state, player_steps|
       service = TakeTurn.new(game_state: current_game_state, player_colour: player_steps[0], steps: player_steps[1])
       service.call
-
-      puts "BUILD GAME STATE LOOP"
-      puts "CURRENT CHUNK: #{player_steps}"
-      puts "++++++++++++++++++++++++++++++"
 
       @errors += service.errors
       service.game_state

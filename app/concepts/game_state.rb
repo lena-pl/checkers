@@ -45,7 +45,7 @@ class GameState
   end
 
   def active_pieces_count(player)
-    @board.graphed_layout.count {|square| square.occupant == player.colour}
+    @board.layout.count {|square| square.occupant == player.colour}
   end
 
   def legal_moves_left_for_player?(player)

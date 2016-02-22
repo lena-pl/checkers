@@ -57,11 +57,7 @@ class AvailableTurns
 
     potential_destinations.reject! { |destination| destination == nil }
 
-    if potential_destinations.present?
-      potential_destinations.select { |position| @board.square_occupant(position) == "empty" }
-    else
-      []
-    end
+    potential_destinations.select { |position| @board.square_occupant(position) == "empty" }
   end
 
   def in_horizontal_direction(direction, positions)

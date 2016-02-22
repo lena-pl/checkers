@@ -48,67 +48,7 @@ class TakeTurn
 
   def more_pieces_can_be_captured?
     current_destination = @steps.last.to
-    enemies = adjacent_enemies(forward_facing_adjacent_node_positions(current_destination))
 
-    if enemies.present?
-      empty_destinations(enemies_with_directions(enemies, forward_facing_adjacent_node_positions(current_destination))).present?
-    else
-      false
-    end
-  end
-
-  def forward_facing_adjacent_node_positions(square_position)
-    @board.square_connections(square_position).select do |connection|
-      case @player.colour
-      when "red"
-        connection > square_position
-      when "white"
-        connection < square_position
-      end
-    end
-  end
-
-  def adjacent_enemies(positions)
-    positions.select { |position| @board.square_occupant(position) == enemy_colour }
-  end
-
-  def enemies_with_directions(enemies, forward_facing_node_positions)
-    positions = forward_facing_node_positions.sort
-
-    enemies.map do |enemy|
-      enemy == positions.first ? [enemy, "left"] : [enemy, "right"]
-    end
-  end
-
-  def empty_destinations(enemies_and_their_directions)
-    potential_destinations = enemies_and_their_directions.map do |enemy_direction_pair|
-      enemy = enemy_direction_pair[0]
-      direction = enemy_direction_pair[1]
-      positions = forward_facing_adjacent_node_positions(enemy)
-
-      in_horizontal_direction(direction, positions)
-    end
-
-    potential_destinations.reject! { |destination| destination == nil }
-
-    if potential_destinations.present?
-      potential_destinations.select { |position| @board.square_occupant(position) == "empty" }
-    else
-      []
-    end
-  end
-
-  def in_horizontal_direction(direction, positions)
-    positions.sort
-
-    if direction == "right"
-      positions.last
-    else
-      positions.first
-    end
-  end
-
-  def enemy_colour
-    @player.colour == "red" ? "white" : "red"
+    AvailableTurns.new(player: @player, board: @board, piece_position: current_destination).more_jump_moves_available?
   end
 end

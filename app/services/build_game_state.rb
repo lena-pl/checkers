@@ -8,7 +8,7 @@ class BuildGameState
 
   def call
     player_turns_and_colours.inject(base_state) do |current_game_state, player_steps|
-      service = TakeTurn.new(game_state: current_game_state, player_colour: player_steps[0], steps: player_steps[1])
+      service = TakeTurn.new(game_state: current_game_state, player: player_steps[0], steps: player_steps[1])
       service.call
 
       @errors += service.errors
@@ -20,24 +20,24 @@ class BuildGameState
 
   def player_turns_and_colours
     all_steps = @game.steps.order(:id)
-    chunks = []
+    steps_chunked_by_player = []
 
     all_steps.chunk do |step|
       step.player == red_player
     end.each do |red_player, steps|
-      chunks.push [red_player, steps]
+      steps_chunked_by_player.push [red_player, steps]
     end
 
-    turn_steps(chunks)
+    turn_steps(steps_chunked_by_player)
   end
 
-  def turn_steps(chunks)
-    chunks.map do |chunk|
+  def turn_steps(steps_chunked_by_player)
+    steps_chunked_by_player.map do |chunk|
       if chunk[0] == true
-        chunk[0] = "red"
+        chunk[0] = @game.players.find { |player| player.colour == "red" }
         chunk
       elsif chunk[0] == false
-        chunk[0] = "white"
+        chunk[0] = @game.players.find { |player| player.colour == "white" }
         chunk
       end
     end

@@ -1,10 +1,10 @@
 class TakeTurn
   attr_reader :errors, :game_state
 
-  def initialize(game_state:, player_colour:, steps:)
+  def initialize(game_state:, player:, steps:)
     @game_state = game_state
     @steps = steps
-    @player = game_state.game.players.find { |player| player.colour == player_colour }
+    @player = player
     @board = game_state.board
     @errors = []
   end

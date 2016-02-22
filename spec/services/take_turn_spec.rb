@@ -13,7 +13,7 @@ RSpec.describe TakeTurn do
         let(:steps) { [player_one.steps.create!(kind: :simple, from: 12, to: 16)] }
 
         it "applies the step and returns the new game state without errors" do
-          service = TakeTurn.new(game_state: base_game_state, player_colour: player_one.colour, steps: steps)
+          service = TakeTurn.new(game_state: base_game_state, player: player_one, steps: steps)
           service.call
 
           expect(service.errors).to be_empty
@@ -33,7 +33,7 @@ RSpec.describe TakeTurn do
         let(:steps) { [player_two.steps.create!(kind: :jump, from: 24, to: 15)] }
 
         it "applies the step and returns the new game state without errors" do
-          service = TakeTurn.new(game_state: base_game_state, player_colour: player_two.colour, steps: steps)
+          service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
           service.call
 
           expect(service.errors).to be_empty
@@ -53,7 +53,7 @@ RSpec.describe TakeTurn do
           let(:steps) { [player_two.steps.create!(kind: :jump, from: 24, to: 15), player_two.steps.create!(kind: :jump, from: 15, to: 8)] }
 
           it "applies the step and returns the new game state without errors" do
-            service = TakeTurn.new(game_state: base_game_state, player_colour: player_two.colour, steps: steps)
+            service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
             service.call
 
             expect(service.errors).to be_empty
@@ -66,7 +66,7 @@ RSpec.describe TakeTurn do
           let(:steps) { [player_two.steps.create!(kind: :jump, from: 24, to: 15)] }
 
           it "applies the step, but keeps curent player same and returns an error" do
-            service = TakeTurn.new(game_state: base_game_state, player_colour: player_two.colour, steps: steps)
+            service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
             service.call
 
             expect(service.errors).to eq ["You must make all available jumps to complete your turn"]
@@ -81,7 +81,7 @@ RSpec.describe TakeTurn do
       let(:steps) { [player_two.steps.create!(kind: :simple, from: 24, to: 20)] }
 
       it "does not alter the game state and returns an error" do
-        service = TakeTurn.new(game_state: base_game_state, player_colour: player_two.colour, steps: steps)
+        service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
         service.call
 
         expect(service.errors).to eq ["It's not your turn right now!"]

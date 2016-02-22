@@ -58,13 +58,13 @@ class TakeTurn
   end
 
   def forward_facing_adjacent_node_positions(square_position)
-    case @player.colour
-    when "red"
-      @board.square_connections(square_position).select { |connection| connection > square_position }
-    when "white"
-      @board.square_connections(square_position).select { |connection| connection < square_position }
-    else
-      raise ArgumentError
+    @board.square_connections(square_position).select do |connection|
+      case @player.colour
+      when "red"
+        connection > square_position
+      when "white"
+        connection < square_position
+      end
     end
   end
 
@@ -76,11 +76,7 @@ class TakeTurn
     positions = forward_facing_node_positions.sort
 
     enemies.map do |enemy|
-      if enemy == positions.first
-        [enemy, "left"]
-      else
-        [enemy, "right"]
-      end
+      enemy == positions.first ? [enemy, "left"] : [enemy, "right"]
     end
   end
 
@@ -113,13 +109,6 @@ class TakeTurn
   end
 
   def enemy_colour
-    case @player.colour
-    when "red"
-      "white"
-    when "white"
-      "red"
-    else
-      raise ArgumentError
-    end
+    @player.colour == "red" ? "white" : "red"
   end
 end

@@ -37,7 +37,7 @@ class GameState
   end
 
   def player_lost?(player)
-    !active_pieces_left_for_player?(player) || !legal_moves_left_for_player?(player)
+    (!active_pieces_left_for_player?(player) || !legal_moves_left_for_player?(player)) && !draw?
   end
 
   def active_pieces_left_for_player?(player)
@@ -49,6 +49,11 @@ class GameState
   end
 
   def legal_moves_left_for_player?(player)
-    true
+    player_pieces = @board.layout.select { |square| @board.square_occupant(square.position) == player.colour }
+
+    player_pieces.map do |piece|
+      check = AvailableTurns.new(player: player, board: @board, piece_position: piece.position)
+      check.more_jump_moves_available? || check.more_simple_moves_available?
+    end.include? true
   end
 end

@@ -25,8 +25,6 @@ class ApplyStep
       can_complete_simple_move?
     when "jump"
       can_complete_jump_move?
-    else
-      raise ArgumentError
     end
   end
 
@@ -69,8 +67,6 @@ class ApplyStep
       @step.from < @step.to
     when "white"
       @step.from > @step.to
-    else
-      raise ArgumentError
     end
   end
 
@@ -80,8 +76,6 @@ class ApplyStep
       "white"
     when "white"
       "red"
-    else
-      raise ArgumentError
     end
   end
 end

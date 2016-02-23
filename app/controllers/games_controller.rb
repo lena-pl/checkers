@@ -15,5 +15,8 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
+    service = BuildGameState.new(@game)
+    @game_state = service.call
+    @errors = service.errors
   end
 end

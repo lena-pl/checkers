@@ -2,3 +2,41 @@
 
 <p>Player 1 ID: <%= @game.players.first.id %></p>
 <p>Player 2 ID: <%= @game.players.second.id %></p>
+
+<p>Errors: <%= @errors %></p>
+
+<% if @game_state.over? %>
+  <h2>Game Over!</h2>
+  <p>Winner: Player <%= @game_state.winner == @game.players.first ? "1" : "2" %></p>
+  <p>Loser: Player <%= @game_state.loser == @game.players.first ? "1" : "2" %></p>
+<% else %>
+  <h2>Board</h2>
+  <% @game_state.board.layout.in_groups_of(4).each_with_index do |row, index| %>
+    <div>
+      <% row_index = index + 1 %>
+      <% row.each do |square| %>
+        <% if row_index % 2 != 0 %>
+          <div class="square empty">&nbsp;<br>&nbsp;</div>
+          <div class="square"><%= square.position %><br><%= square.occupant != "empty" ?   display_draught_man_entity(square.occupant) : "&nbsp;".html_safe %></div>
+        <% elsif row_index % 2 == 0 %>
+          <div class="square"><%= square.position %><br><%= square.occupant != "empty" ? display_draught_man_entity(square.occupant) : "&nbsp;".html_safe %></div>
+          <div class="square empty">&nbsp;<br>&nbsp;</div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <p>Player <%= @game_state.current_player == @game.players.first ? "1" : "2" %> turn:</p>
+  <%= form_for [@game, @game_state.current_player, @game_state.current_player.steps.new] do |f| %>
+    <% owned_pieces = @game_state.board.layout.map { |square| square if square.occupant == @game_state.current_player.colour }.compact %>
+    <% destinations = @game_state.board.layout.map { |square| square if square.occupant != @game_state.current_player.colour }.compact %>
+
+    From:
+    <%= f.select :from, options_for_select(owned_pieces.collect {|square| [ "#{square.position} #{square.occupant}", square.position ] }) %>
+
+    To:
+    <%= f.select :to, options_for_select(destinations.collect {|square| [ "#{square.position} #{square.occupant}", square.position ] }) %>
+
+    <%= f.submit "Take Step" %>
+  <% end %>
+<% end %>

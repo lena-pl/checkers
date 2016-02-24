@@ -16,11 +16,7 @@
 
 @font-face {
   font-family: 'DejaVuSans';
-  src: font-url('DejaVuSans-webfont.eot');
-  src: font-url('DejaVuSans-webfont.eot?#iefix') format('embedded-opentype'),
-      font-url('DejaVuSans-webfont.woff') format('woff'),
-      font-url('DejaVuSans-webfont.ttf') format('truetype'),
-      font-url('DejaVuSans-webfont.svg#dejavu_sansbook') format('svg');
+  src: url(font-path('DejaVuSans.ttf')) format('truetype');
   font-weight: normal;
   font-style: normal;
 }

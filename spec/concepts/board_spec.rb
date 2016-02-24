@@ -174,4 +174,24 @@ RSpec.describe Board do
       ]
     end
   end
+
+  describe "#crown_piece" do
+    it "changes the rank of a piece from man to king" do
+      expect(subject.square_occupant(10).rank).to eq "man"
+
+      subject.crown_piece(10)
+
+      expect(subject.square_occupant(10).rank).to eq "king"
+    end
+  end
+
+  describe "#kings_row" do
+    it "returns the correct king's row positions for a red player" do
+      expect(subject.kings_row(player_one)).to eq Board::RED_PLAYER_KINGS_ROW_32_SQUARE_BOARD
+    end
+
+    it "returns the correct king's row positions for a white player" do
+      expect(subject.kings_row(player_two)).to eq Board::WHITE_PLAYER_KINGS_ROW_32_SQUARE_BOARD
+    end
+  end
 end

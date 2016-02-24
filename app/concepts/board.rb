@@ -1,6 +1,9 @@
 class Board
   attr_reader :squares, :layout
 
+  RED_PLAYER_KINGS_ROW_32_SQUARE_BOARD = [29, 30, 31, 32]
+  WHITE_PLAYER_KINGS_ROW_32_SQUARE_BOARD = [1, 2, 3, 4]
+
   def initialize(squares)
     @squares = squares
     @layout = original_layout
@@ -47,10 +50,26 @@ class Board
     end
   end
 
+  def crown_piece(piece_position)
+    piece = square_by_position(piece_position)
+
+    piece.occupant.rank = "king"
+
+    piece
+  end
+
+  def kings_row(player)
+    if player.red?
+      RED_PLAYER_KINGS_ROW_32_SQUARE_BOARD
+    elsif player.white?
+      WHITE_PLAYER_KINGS_ROW_32_SQUARE_BOARD
+    end
+  end
+
   private
 
   def original_layout
-    ConstructStartingBoard.new(squares).call
+    ConstructBoard.new(squares).call
   end
 
   def square_by_position(pos)

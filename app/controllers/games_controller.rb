@@ -17,6 +17,9 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     service = BuildGameState.new(@game)
     @game_state = service.call
-    @errors = service.errors
+
+    if service.errors.present?
+      flash.alert ? flash.alert += service.errors : flash.alert = service.errors
+    end
   end
 end

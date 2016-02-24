@@ -1,18 +1,27 @@
 class StepsController < ApplicationController
-  def new
-    @step = Step.new
-  end
-
   def create
     game = Game.find(params[:game_id])
     game_state = BuildGameState.new(game).call
     player = game_state.current_player
     board = game_state.board
 
-    if board.square_occupant(params[:step][:from].to_i) == player.colour
+    from = params[:step][:from].to_i
+    to = params[:step][:to].to_i
+
+    if board.square_occupant(from) == player.colour
       Step.transaction do
-        player.steps.create!(kind: step_kind(board), from: params[:step][:from].to_i, to: params[:step][:to].to_i)
+        step = player.steps.new(kind: step_kind(board, from, to), from: from, to: to)
+
+        validator = ValidateStep.new(board, step)
+
+        if validator.call
+          step.save!
+        end
+
+        flash.alert = validator.errors if validator.errors.present?
       end
+    else
+      flash.alert = ["That square doesn't hold one of your pieces!"]
     end
 
     redirect_to game_path(game)
@@ -20,8 +29,8 @@ class StepsController < ApplicationController
 
   private
 
-  def step_kind(board)
-    if board.square_connections(params[:step][:from].to_i).include? params[:step][:to].to_i
+  def step_kind(board, from, to)
+    if board.square_connections(from).include? to
       :simple
     else
       :jump

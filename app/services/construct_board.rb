@@ -19,10 +19,10 @@ class ConstructBoard
 
   def squares_with_connections
     top_half_connected = @squares.zip(top_to_bottom_connections)
-    flat_top_half_connected = top_half_connected.map {|pos_occ, connection| [pos_occ[0],pos_occ[1], connection]}
+    flat_top_half_connected = top_half_connected.map {|(position, occupant), connection| [position, occupant, connection]}
 
     bottom_half_connected = flat_top_half_connected.reverse.zip(bottom_to_top_connections)
-    flat_bottom_half_connected = bottom_half_connected.map {|pos_occ_red_con, white_con| [pos_occ_red_con[0], pos_occ_red_con[1], pos_occ_red_con[2], white_con]}
+    flat_bottom_half_connected = bottom_half_connected.map {|(position, occupant, top_to_bottom_connection), bottom_to_top_connection| [position, occupant, top_to_bottom_connection, bottom_to_top_connection]}
 
     with_all_connections = flat_bottom_half_connected.map {|square| square.flatten.reject(&:blank?)}.reverse
 

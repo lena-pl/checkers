@@ -1,7 +1,7 @@
 class ConstructBoard
   SQUARE_POSITIONS_WITH_TOP_CONNECTIONS_32_SQUARE_BOARD = (5..32).to_a
   SQUARE_POSITIONS_WITH_BOTTOM_CONNECTIONS_32_SQUARE_BOARD = (1..28).to_a
-  SQUARES_PER_ROW_32_SQUARE_BOARD = 4
+  AVAILABLE_SQUARES_PER_ROW_32_SQUARE_BOARD = 4
 
   Square = Struct.new(:position, :occupant, :connections)
 
@@ -30,7 +30,7 @@ class ConstructBoard
   end
 
   def top_to_bottom_connections
-    rows = SQUARE_POSITIONS_WITH_TOP_CONNECTIONS_32_SQUARE_BOARD.in_groups_of(SQUARES_PER_ROW_32_SQUARE_BOARD)
+    rows = SQUARE_POSITIONS_WITH_TOP_CONNECTIONS_32_SQUARE_BOARD.in_groups_of(AVAILABLE_SQUARES_PER_ROW_32_SQUARE_BOARD)
     row_count = 1
 
     rows.map do |square_one, square_two, square_three, square_four|
@@ -45,7 +45,7 @@ class ConstructBoard
   end
 
   def bottom_to_top_connections
-    rows = SQUARE_POSITIONS_WITH_BOTTOM_CONNECTIONS_32_SQUARE_BOARD.reverse.in_groups_of(SQUARES_PER_ROW_32_SQUARE_BOARD)
+    rows = SQUARE_POSITIONS_WITH_BOTTOM_CONNECTIONS_32_SQUARE_BOARD.reverse.in_groups_of(AVAILABLE_SQUARES_PER_ROW_32_SQUARE_BOARD)
     row_count = 1
 
     rows.map do |square_one, square_two, square_three, square_four|

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   resources :games, only: [:new, :create, :show] do
     resource :player do
-      resources :steps, only: [:new, :create]
+      resources :steps, only: [:create]
     end
   end
 

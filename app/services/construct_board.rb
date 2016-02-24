@@ -38,7 +38,7 @@ class ConstructBoard
         row_count += 1
         [[square_one, square_two], [square_two, square_three], [square_three, square_four], [square_four]]
       else
-        row_count +=1
+        row_count += 1
         [[square_one], [square_one, square_two], [square_two, square_three], [square_three, square_four]]
       end
     end.flatten(1)
@@ -53,7 +53,7 @@ class ConstructBoard
         row_count += 1
         [[square_one, square_two], [square_two, square_three], [square_three, square_four], [square_four]]
       else
-        row_count +=1
+        row_count += 1
         [[square_one], [square_one, square_two], [square_two, square_three], [square_three, square_four]]
       end
     end.flatten(1)

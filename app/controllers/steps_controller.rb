@@ -8,7 +8,7 @@ class StepsController < ApplicationController
     from = params[:step][:from].to_i
     to = params[:step][:to].to_i
 
-    if board.square_occupant(from) == player.colour
+    if board.square_occupant(from).colour == player.colour
       Step.transaction do
         step = player.steps.new(kind: step_kind(board, from, to), from: from, to: to)
 

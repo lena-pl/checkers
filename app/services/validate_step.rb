@@ -32,7 +32,7 @@ class ValidateStep
   end
 
   def destination_empty?
-    board.square_occupant(to) == "empty"
+    board.square_occupant(to).nil?
   end
 
   def squares_adjacent?
@@ -41,8 +41,9 @@ class ValidateStep
 
   def valid_jump_path?
     board.shared_piece_position(from, to).present? &&
-      board.square_occupant(board.shared_piece_position(from, to)) == enemy_colour &&
-       board.square_occupant(to) == "empty"
+      !board.square_occupant(board.shared_piece_position(from, to)).nil? &&
+        board.square_occupant(board.shared_piece_position(from, to)).colour == enemy_colour &&
+         board.square_occupant(to).nil?
   end
 
   def correct_direction?

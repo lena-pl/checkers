@@ -90,7 +90,7 @@ RSpec.describe Board do
 
       subject.capture_piece(10)
 
-      expect(subject.square_occupant(10)).to eq "empty"
+      expect(subject.square_occupant(10)).to eq nil
 
       expect(subject.layout).to eql [
         square(position: 1, occupant: "red", connections: [5, 6]),
@@ -135,7 +135,7 @@ RSpec.describe Board do
 
       subject.move_piece(10, 15)
 
-      expect(subject.square_occupant(10)).to eq "empty"
+      expect(subject.square_occupant(10)).to eq nil
       expect(subject.square_occupant(15)).to eq square_ten.occupant
 
       expect(subject.layout).to eql [

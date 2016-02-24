@@ -19,13 +19,13 @@ class Board
   end
 
   def player_pieces(player)
-    layout.select { |square| square_occupant(square.position) == player.colour }
+    layout.select { |square| square_occupant(square.position).colour == player.colour if !square_occupant(square.position).nil? }
   end
 
   def capture_piece(position)
     layout.map do |square|
       if square.position == position
-        square.occupant = "empty"
+        square.occupant = nil
       end
 
       square
@@ -34,13 +34,13 @@ class Board
 
   def move_piece(from_position, to_position)
     from_square = square_by_position(from_position)
-    piece_colour = from_square.occupant
+    piece = from_square.occupant
 
     layout.map do |square|
       if square.position == to_position
-        square.occupant = piece_colour
+        square.occupant = piece
       elsif square.position == from_position
-        square.occupant = "empty"
+        square.occupant = nil
       end
 
       square
@@ -50,7 +50,7 @@ class Board
   private
 
   def original_layout
-    ConstructBoard.new(squares).call
+    ConstructStartingBoard.new(squares).call
   end
 
   def square_by_position(pos)

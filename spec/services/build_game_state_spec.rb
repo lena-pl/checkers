@@ -27,8 +27,8 @@ RSpec.describe BuildGameState do
       it "applies changes to the board in the new game state" do
         service = BuildGameState.new(game)
 
-        expect(service.call.board.square_occupant(12)).to eq "empty"
-        expect(service.call.board.square_occupant(16)).to eq "red"
+        expect(service.call.board.square_occupant(12)).to be_nil
+        expect(service.call.board.square_occupant(16).colour).to eq "red"
       end
     end
 
@@ -62,8 +62,8 @@ RSpec.describe BuildGameState do
       it "applies all turn changes to the board in the new game state" do
         service = BuildGameState.new(game)
 
-        expect(service.call.board.square_occupant(22)).to eq "empty"
-        expect(service.call.board.square_occupant(8)).to eq "white"
+        expect(service.call.board.square_occupant(22)).to be_nil
+        expect(service.call.board.square_occupant(8).colour).to eq "white"
       end
     end
 

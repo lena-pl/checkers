@@ -14,7 +14,7 @@ class AvailableTurns
   end
 
   def more_simple_moves_available?
-    forward_facing_adjacent_piece_positions(piece_position).any? { |piece_position| board.square_occupant(piece_position) == "empty" }
+    forward_facing_adjacent_piece_positions(piece_position).any? { |piece_position| board.square_occupant(piece_position).nil? }
   end
 
   private
@@ -34,7 +34,7 @@ class AvailableTurns
   end
 
   def adjacent_enemies
-    forward_facing_adjacent_piece_positions(piece_position).select { |position| board.square_occupant(position) == enemy_colour }
+    forward_facing_adjacent_piece_positions(piece_position).select { |position| board.square_occupant(position).colour == enemy_colour if !board.square_occupant(position).nil? }
   end
 
   def enemies_with_directions
@@ -53,7 +53,7 @@ class AvailableTurns
     end
 
     potential_destinations.compact.select do |position|
-      board.square_occupant(position) == "empty"
+      board.square_occupant(position).nil?
     end
   end
 

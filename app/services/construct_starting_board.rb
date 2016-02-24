@@ -1,17 +1,18 @@
-class ConstructBoard
+class ConstructStartingBoard
   SQUARE_POSITIONS_WITH_TOP_CONNECTIONS_32_SQUARE_BOARD = (5..32).to_a
   SQUARE_POSITIONS_WITH_BOTTOM_CONNECTIONS_32_SQUARE_BOARD = (1..28).to_a
   AVAILABLE_SQUARES_PER_ROW_32_SQUARE_BOARD = 4
 
   Square = Struct.new(:position, :occupant, :connections)
+  Piece = Struct.new(:rank, :colour)
 
   def initialize(squares)
     @squares = squares
   end
 
   def call
-    squares_with_connections.map do |position, occupant, connections|
-      Square.new(position, occupant, connections.sort)
+    squares_with_connections.map do |position, occupant_colour, connections|
+      Square.new(position, occupant_colour != "empty" ? Piece.new("man", occupant_colour) : nil, connections.sort)
     end
   end
 
@@ -19,10 +20,10 @@ class ConstructBoard
 
   def squares_with_connections
     top_half_connected = @squares.zip(top_to_bottom_connections)
-    flat_top_half_connected = top_half_connected.map {|(position, occupant), connection| [position, occupant, connection]}
+    flat_top_half_connected = top_half_connected.map {|(position, occupant_colour), connection| [position, occupant_colour, connection]}
 
     bottom_half_connected = flat_top_half_connected.reverse.zip(bottom_to_top_connections)
-    flat_bottom_half_connected = bottom_half_connected.map {|(position, occupant, top_to_bottom_connection), bottom_to_top_connection| [position, occupant, top_to_bottom_connection, bottom_to_top_connection]}
+    flat_bottom_half_connected = bottom_half_connected.map {|(position, occupant_colour, top_to_bottom_connection), bottom_to_top_connection| [position, occupant_colour, top_to_bottom_connection, bottom_to_top_connection]}
 
     with_all_connections = flat_bottom_half_connected.map {|square| square.flatten.compact}.reverse
 

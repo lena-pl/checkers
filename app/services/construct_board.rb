@@ -24,7 +24,7 @@ class ConstructBoard
     bottom_half_connected = flat_top_half_connected.reverse.zip(bottom_to_top_connections)
     flat_bottom_half_connected = bottom_half_connected.map {|(position, occupant, top_to_bottom_connection), bottom_to_top_connection| [position, occupant, top_to_bottom_connection, bottom_to_top_connection]}
 
-    with_all_connections = flat_bottom_half_connected.map {|square| square.flatten.reject(&:blank?)}.reverse
+    with_all_connections = flat_bottom_half_connected.map {|square| square.flatten.compact}.reverse
 
     with_all_connections.map { |square| square[0..1].append(square[2..-1]) }
   end

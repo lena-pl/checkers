@@ -12,39 +12,50 @@ RSpec.describe ConstructBoard do
 
   describe "#call" do
     it "returns an array of square structs with correct positions, connections and occupants" do
+      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.gsub(/^ {8}/, '')
+        .r.r.r.r
+        r.r.r.r.
+        .r.r.r.r
+        _._._._.
+        ._._._._
+        w.w.w.w.
+        .w.w.w.w
+        w.w.w.w.
+      BOARD
+
       expect(subject.layout).to eql [
-        square(position: 1, occupant: "red", connections: [5, 6]),
-        square(position: 2, occupant: "red", connections: [6, 7]),
-        square(position: 3, occupant: "red", connections: [7, 8]),
-        square(position: 4, occupant: "red", connections: [8]),
-        square(position: 5, occupant: "red", connections: [1, 9]),
-        square(position: 6, occupant: "red", connections: [1, 2, 9, 10]),
-        square(position: 7, occupant: "red", connections: [2, 3, 10, 11]),
-        square(position: 8, occupant: "red", connections: [3, 4, 11, 12]),
-        square(position: 9, occupant: "red", connections: [5, 6, 13, 14]),
-        square(position: 10, occupant: "red", connections: [6, 7, 14, 15]),
-        square(position: 11, occupant: "red", connections: [7, 8, 15, 16]),
-        square(position: 12, occupant: "red", connections: [8, 16]),
-        square(position: 13, occupant: "empty", connections: [9, 17]),
-        square(position: 14, occupant: "empty", connections: [9, 10, 17, 18]),
-        square(position: 15, occupant: "empty", connections: [10, 11, 18, 19]),
-        square(position: 16, occupant: "empty", connections: [11, 12, 19, 20]),
-        square(position: 17, occupant: "empty", connections: [13, 14, 21, 22]),
-        square(position: 18, occupant: "empty", connections: [14, 15, 22, 23]),
-        square(position: 19, occupant: "empty", connections: [15, 16, 23, 24]),
-        square(position: 20, occupant: "empty", connections: [16, 24]),
-        square(position: 21, occupant: "white", connections: [17, 25]),
-        square(position: 22, occupant: "white", connections: [17, 18, 25, 26]),
-        square(position: 23, occupant: "white", connections: [18, 19, 26, 27]),
-        square(position: 24, occupant: "white", connections: [19, 20, 27, 28]),
-        square(position: 25, occupant: "white", connections: [21, 22, 29, 30]),
-        square(position: 26, occupant: "white", connections: [22, 23, 30, 31]),
-        square(position: 27, occupant: "white", connections: [23, 24, 31, 32]),
-        square(position: 28, occupant: "white", connections: [24, 32]),
-        square(position: 29, occupant: "white", connections: [25]),
-        square(position: 30, occupant: "white", connections: [25, 26]),
-        square(position: 31, occupant: "white", connections: [26, 27]),
-        square(position: 32, occupant: "white", connections: [27, 28])
+        square(1, "red", [5, 6]),
+        square(2, "red", [6, 7]),
+        square(3, "red", [7, 8]),
+        square(4, "red", [8]),
+        square(5, "red", [1, 9]),
+        square(6, "red", [1, 2, 9, 10]),
+        square(7, "red", [2, 3, 10, 11]),
+        square(8, "red", [3, 4, 11, 12]),
+        square(9, "red", [5, 6, 13, 14]),
+        square(10, "red", [6, 7, 14, 15]),
+        square(11, "red", [7, 8, 15, 16]),
+        square(12, "red", [8, 16]),
+        square(13, "empty", [9, 17]),
+        square(14, "empty", [9, 10, 17, 18]),
+        square(15, "empty", [10, 11, 18, 19]),
+        square(16, "empty", [11, 12, 19, 20]),
+        square(17, "empty", [13, 14, 21, 22]),
+        square(18, "empty", [14, 15, 22, 23]),
+        square(19, "empty", [15, 16, 23, 24]),
+        square(20, "empty", [16, 24]),
+        square(21, "white", [17, 25]),
+        square(22, "white", [17, 18, 25, 26]),
+        square(23, "white", [18, 19, 26, 27]),
+        square(24, "white", [19, 20, 27, 28]),
+        square(25, "white", [21, 22, 29, 30]),
+        square(26, "white", [22, 23, 30, 31]),
+        square(27, "white", [23, 24, 31, 32]),
+        square(28, "white", [24, 32]),
+        square(29, "white", [25]),
+        square(30, "white", [25, 26]),
+        square(31, "white", [26, 27]),
+        square(32, "white", [27, 28])
       ]
     end
   end

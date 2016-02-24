@@ -19,40 +19,16 @@ RSpec.describe ApplyStep do
         service = ApplyStep.new(board, step)
         service.call
 
-        expect(service.board.layout).to eql [
-          square(position: 1, occupant: "red", connections: [5, 6]),
-          square(position: 2, occupant: "red", connections: [6, 7]),
-          square(position: 3, occupant: "red", connections: [7, 8]),
-          square(position: 4, occupant: "red", connections: [8]),
-          square(position: 5, occupant: "red", connections: [1, 9]),
-          square(position: 6, occupant: "red", connections: [1, 2, 9, 10]),
-          square(position: 7, occupant: "red", connections: [2, 3, 10, 11]),
-          square(position: 8, occupant: "red", connections: [3, 4, 11, 12]),
-          square(position: 9, occupant: "red", connections: [5, 6, 13, 14]),
-          square(position: 10, occupant: "red", connections: [6, 7, 14, 15]),
-          square(position: 11, occupant: "red", connections: [7, 8, 15, 16]),
-          square(position: 12, occupant: "empty", connections: [8, 16]),
-          square(position: 13, occupant: "empty", connections: [9, 17]),
-          square(position: 14, occupant: "empty", connections: [9, 10, 17, 18]),
-          square(position: 15, occupant: "empty", connections: [10, 11, 18, 19]),
-          square(position: 16, occupant: "red", connections: [11, 12, 19, 20]),
-          square(position: 17, occupant: "empty", connections: [13, 14, 21, 22]),
-          square(position: 18, occupant: "empty", connections: [14, 15, 22, 23]),
-          square(position: 19, occupant: "empty", connections: [15, 16, 23, 24]),
-          square(position: 20, occupant: "empty", connections: [16, 24]),
-          square(position: 21, occupant: "white", connections: [17, 25]),
-          square(position: 22, occupant: "white", connections: [17, 18, 25, 26]),
-          square(position: 23, occupant: "white", connections: [18, 19, 26, 27]),
-          square(position: 24, occupant: "white", connections: [19, 20, 27, 28]),
-          square(position: 25, occupant: "white", connections: [21, 22, 29, 30]),
-          square(position: 26, occupant: "white", connections: [22, 23, 30, 31]),
-          square(position: 27, occupant: "white", connections: [23, 24, 31, 32]),
-          square(position: 28, occupant: "white", connections: [24, 32]),
-          square(position: 29, occupant: "white", connections: [25]),
-          square(position: 30, occupant: "white", connections: [25, 26]),
-          square(position: 31, occupant: "white", connections: [26, 27]),
-          square(position: 32, occupant: "white", connections: [27, 28])
-        ]
+        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.gsub(/^ {10}/, '')
+          .r.r.r.r
+          r.r.r.r.
+          .r.r.r._
+          _._._.r.
+          ._._._._
+          w.w.w.w.
+          .w.w.w.w
+          w.w.w.w.
+        BOARD
       end
     end
 
@@ -65,40 +41,16 @@ RSpec.describe ApplyStep do
         service = ApplyStep.new(board, step)
         service.call
 
-        expect(service.board.layout).to eql [
-          square(position: 1, occupant: "red", connections: [5, 6]),
-          square(position: 2, occupant: "red", connections: [6, 7]),
-          square(position: 3, occupant: "red", connections: [7, 8]),
-          square(position: 4, occupant: "red", connections: [8]),
-          square(position: 5, occupant: "red", connections: [1, 9]),
-          square(position: 6, occupant: "red", connections: [1, 2, 9, 10]),
-          square(position: 7, occupant: "red", connections: [2, 3, 10, 11]),
-          square(position: 8, occupant: "red", connections: [3, 4, 11, 12]),
-          square(position: 9, occupant: "red", connections: [5, 6, 13, 14]),
-          square(position: 10, occupant: "red", connections: [6, 7, 14, 15]),
-          square(position: 11, occupant: "red", connections: [7, 8, 15, 16]),
-          square(position: 12, occupant: "empty", connections: [8, 16]),
-          square(position: 13, occupant: "empty", connections: [9, 17]),
-          square(position: 14, occupant: "empty", connections: [9, 10, 17, 18]),
-          square(position: 15, occupant: "white", connections: [10, 11, 18, 19]),
-          square(position: 16, occupant: "empty", connections: [11, 12, 19, 20]),
-          square(position: 17, occupant: "empty", connections: [13, 14, 21, 22]),
-          square(position: 18, occupant: "empty", connections: [14, 15, 22, 23]),
-          square(position: 19, occupant: "empty", connections: [15, 16, 23, 24]),
-          square(position: 20, occupant: "empty", connections: [16, 24]),
-          square(position: 21, occupant: "white", connections: [17, 25]),
-          square(position: 22, occupant: "white", connections: [17, 18, 25, 26]),
-          square(position: 23, occupant: "white", connections: [18, 19, 26, 27]),
-          square(position: 24, occupant: "empty", connections: [19, 20, 27, 28]),
-          square(position: 25, occupant: "white", connections: [21, 22, 29, 30]),
-          square(position: 26, occupant: "white", connections: [22, 23, 30, 31]),
-          square(position: 27, occupant: "white", connections: [23, 24, 31, 32]),
-          square(position: 28, occupant: "white", connections: [24, 32]),
-          square(position: 29, occupant: "white", connections: [25]),
-          square(position: 30, occupant: "white", connections: [25, 26]),
-          square(position: 31, occupant: "white", connections: [26, 27]),
-          square(position: 32, occupant: "white", connections: [27, 28])
-        ]
+        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.gsub(/^ {10}/, '')
+          .r.r.r.r
+          r.r.r.r.
+          .r.r.r._
+          _._.w._.
+          ._._._._
+          w.w.w._.
+          .w.w.w.w
+          w.w.w.w.
+        BOARD
       end
     end
 

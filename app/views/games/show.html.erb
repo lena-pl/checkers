@@ -3,7 +3,11 @@
 <p>Player 1 ID: <%= @game.players.first.id %></p>
 <p>Player 2 ID: <%= @game.players.second.id %></p>
 
-<p>Errors: <%= @errors %></p>
+<% if flash.alert %>
+  <% flash.alert.each do |message| %>
+    <div class="alert"><%= message %></div>
+  <% end %>
+<% end %>
 
 <% if @game_state.over? %>
   <h2>Game Over!</h2>

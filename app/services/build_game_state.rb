@@ -1,5 +1,8 @@
 class BuildGameState
   attr_reader :game, :errors
+  ORIGINAL_RED_PIECES_32_SQUARE_BOARD = (1..12).to_a
+  ORIGINAL_EMPTY_SQUARES_32_SQUARE_BOARD = (13..20).to_a
+  ORIGINAL_WHITE_PIECES_32_SQUARE_BOARD = (21..32).to_a
 
   def initialize(game)
     @game = game
@@ -30,9 +33,9 @@ class BuildGameState
   end
 
   def starting_board
-    red_occupied = (1..12).to_a.map { |number| [number, "red"]  }
-    empty = (13..20).to_a.map { |number| [number, "empty"]  }
-    white_occupied = (21..32).to_a.map { |number| [number, "white"]  }
+    red_occupied = ORIGINAL_RED_PIECES_32_SQUARE_BOARD.map { |number| [number, "red"]  }
+    empty = ORIGINAL_EMPTY_SQUARES_32_SQUARE_BOARD.map { |number| [number, "empty"]  }
+    white_occupied = ORIGINAL_WHITE_PIECES_32_SQUARE_BOARD.map { |number| [number, "white"]  }
 
     Board.new(red_occupied + empty + white_occupied)
   end

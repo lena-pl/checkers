@@ -1,4 +1,8 @@
 class ConstructBoard
+  SQUARE_POSITIONS_WITH_TOP_CONNECTIONS_32_SQUARE_BOARD = (5..32).to_a
+  SQUARE_POSITIONS_WITH_BOTTOM_CONNECTIONS_32_SQUARE_BOARD = (1..28).to_a
+  SQUARES_PER_ROW_32_SQUARE_BOARD = 4
+
   Square = Struct.new(:position, :occupant, :connections)
 
   def initialize(squares)
@@ -26,31 +30,31 @@ class ConstructBoard
   end
 
   def top_to_bottom_connections
-    rows = (5..32).to_a.in_groups_of(4)
+    rows = SQUARE_POSITIONS_WITH_TOP_CONNECTIONS_32_SQUARE_BOARD.in_groups_of(SQUARES_PER_ROW_32_SQUARE_BOARD)
     row_count = 1
 
-    rows.map do |row|
+    rows.map do |square_one, square_two, square_three, square_four|
       if row_count % 2 != 0
         row_count += 1
-        [[row[0], row[1]], [row[1], row[2]], [row[2], row[3]], [row[3]]]
+        [[square_one, square_two], [square_two, square_three], [square_three, square_four], [square_four]]
       else
         row_count +=1
-        [[row[0]], [row[0], row[1]], [row[1], row[2]], [row[2], row[3]]]
+        [[square_one], [square_one, square_two], [square_two, square_three], [square_three, square_four]]
       end
     end.flatten(1)
   end
 
   def bottom_to_top_connections
-    rows = (1..28).to_a.reverse.in_groups_of(4)
+    rows = SQUARE_POSITIONS_WITH_BOTTOM_CONNECTIONS_32_SQUARE_BOARD.reverse.in_groups_of(SQUARES_PER_ROW_32_SQUARE_BOARD)
     row_count = 1
 
-    rows.map do |row|
+    rows.map do |square_one, square_two, square_three, square_four|
       if row_count % 2 != 0
         row_count += 1
-        [[row[0], row[1]], [row[1], row[2]], [row[2], row[3]], [row[3]]]
+        [[square_one, square_two], [square_two, square_three], [square_three, square_four], [square_four]]
       else
         row_count +=1
-        [[row[0]], [row[0], row[1]], [row[1], row[2]], [row[2], row[3]]]
+        [[square_one], [square_one, square_two], [square_two, square_three], [square_three, square_four]]
       end
     end.flatten(1)
   end

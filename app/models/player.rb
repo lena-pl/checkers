@@ -6,4 +6,8 @@ class Player < ActiveRecord::Base
 
   validates :game, presence: true
   validates :colour, uniqueness: { scope: :game }
+
+  def enemy_colour
+    red? ? "white" : "red"
+  end
 end

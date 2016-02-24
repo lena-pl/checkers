@@ -5,6 +5,8 @@ class Step < ActiveRecord::Base
 
   enum kind: [:simple, :jump]
 
+  scope :ordered, -> { order(:id) }
+
   validates :from, :to, inclusion: {in: SQUARE_RANGE}
   validates :kind, :player, presence: true
 end

@@ -47,6 +47,6 @@ class ValidateStep
   end
 
   def correct_direction?
-    player.red? ? from < to : from > to
+    (board.square_occupant(from).rank == "king") || (player.red? ? from < to : from > to)
   end
 end

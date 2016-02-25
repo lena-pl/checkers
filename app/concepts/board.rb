@@ -1,5 +1,8 @@
 class Board
-  attr_reader :layout
+  attr_reader :squares, :layout
+
+  RED_PLAYER_KINGS_ROW_32_SQUARE_BOARD = [29, 30, 31, 32]
+  WHITE_PLAYER_KINGS_ROW_32_SQUARE_BOARD = [1, 2, 3, 4]
 
   def initialize(squares)
     @squares = squares
@@ -14,10 +17,18 @@ class Board
     square_by_position(position).connections
   end
 
+  def shared_piece_position(from, to)
+    (square_connections(from) & square_connections(to)).first
+  end
+
+  def player_pieces(player)
+    layout.select { |square| square_occupant(square.position).colour == player.colour if !square_occupant(square.position).nil? }
+  end
+
   def capture_piece(position)
-    @layout.map do |square|
+    layout.map do |square|
       if square.position == position
-        square.occupant = "empty"
+        square.occupant = nil
       end
 
       square
@@ -26,72 +37,42 @@ class Board
 
   def move_piece(from_position, to_position)
     from_square = square_by_position(from_position)
-    piece_colour = from_square.occupant
+    piece = from_square.occupant
 
-    @layout.map do |square|
+    layout.map do |square|
       if square.position == to_position
-        square.occupant = piece_colour
+        square.occupant = piece
       elsif square.position == from_position
-        square.occupant = "empty"
+        square.occupant = nil
       end
 
       square
     end
   end
 
-  private
+  def crown_piece(piece_position)
+    piece = square_by_position(piece_position)
 
-  Square = Struct.new(:position, :occupant, :connections)
+    piece.occupant.rank = "king"
 
-  def original_layout
-    squares_with_connections.map do |position, occupant, connections|
-      Square.new(position, occupant, connections.sort)
+    piece
+  end
+
+  def kings_row(player)
+    if player.red?
+      RED_PLAYER_KINGS_ROW_32_SQUARE_BOARD
+    elsif player.white?
+      WHITE_PLAYER_KINGS_ROW_32_SQUARE_BOARD
     end
   end
 
+  private
+
+  def original_layout
+    ConstructBoard.new(squares).call
+  end
+
   def square_by_position(pos)
-    @layout.find { |square| square.position == pos }
-  end
-
-  def squares_with_connections
-    top_half_connected = @squares.zip(top_to_bottom_connections)
-    flat_top_half_connected = top_half_connected.map {|pos_occ, connection| [pos_occ[0],pos_occ[1], connection]}
-
-    bottom_half_connected = flat_top_half_connected.reverse.zip(bottom_to_top_connections)
-    flat_bottom_half_connected = bottom_half_connected.map {|pos_occ_red_con, white_con| [pos_occ_red_con[0], pos_occ_red_con[1], pos_occ_red_con[2], white_con]}
-
-    with_all_connections = flat_bottom_half_connected.map {|square| square.flatten.reject(&:blank?)}.reverse
-
-    with_all_connections.map { |square| square[0..1].append(square[2..-1]) }
-  end
-
-  def top_to_bottom_connections
-    rows = (5..32).to_a.in_groups_of(4)
-    row_count = 1
-
-    rows.map do |row|
-      if row_count % 2 != 0
-        row_count += 1
-        [[row[0], row[1]], [row[1], row[2]], [row[2], row[3]], [row[3]]]
-      else
-        row_count +=1
-        [[row[0]], [row[0], row[1]], [row[1], row[2]], [row[2], row[3]]]
-      end
-    end.flatten(1)
-  end
-
-  def bottom_to_top_connections
-    rows = (1..28).to_a.reverse.in_groups_of(4)
-    row_count = 1
-
-    rows.map do |row|
-      if row_count % 2 != 0
-        row_count += 1
-        [[row[0], row[1]], [row[1], row[2]], [row[2], row[3]], [row[3]]]
-      else
-        row_count +=1
-        [[row[0]], [row[0], row[1]], [row[1], row[2]], [row[2], row[3]]]
-      end
-    end.flatten(1)
+    layout.find { |square| square.position == pos }
   end
 end

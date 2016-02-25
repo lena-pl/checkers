@@ -27,8 +27,8 @@ RSpec.describe BuildGameState do
       it "applies changes to the board in the new game state" do
         service = BuildGameState.new(game)
 
-        expect(service.call.board.square_occupant(12)).to eq "empty"
-        expect(service.call.board.square_occupant(16)).to eq "red"
+        expect(service.call.board.square_occupant(12)).to be_nil
+        expect(service.call.board.square_occupant(16).colour).to eq "red"
       end
     end
 
@@ -62,37 +62,19 @@ RSpec.describe BuildGameState do
       it "applies all turn changes to the board in the new game state" do
         service = BuildGameState.new(game)
 
-        expect(service.call.board.square_occupant(22)).to eq "empty"
-        expect(service.call.board.square_occupant(8)).to eq "white"
+        expect(service.call.board.square_occupant(22)).to be_nil
+        expect(service.call.board.square_occupant(8).colour).to eq "white"
       end
     end
 
     describe "when a player tries to take an illegal step" do
       it "returns not your turn error if wrong player" do
-        step = player_two.steps.create!(kind: :simple, from: 23, to: 18)
+        player_two.steps.create!(kind: :simple, from: 23, to: 18)
 
         service = BuildGameState.new(game)
         service.call
 
         expect(service.errors).to eq ["It's not your turn right now!"]
-      end
-
-      it "returns invalid jump path error when trying to make illegal jump move" do
-        step = player_one.steps.create!(kind: :jump, from: 12, to: 20)
-
-        service = BuildGameState.new(game)
-        service.call
-
-        expect(service.errors).to eq ["That is not a valid jump path!"]
-      end
-
-      it "returns simple move errors on invalid move" do
-        step = player_one.steps.create!(kind: :simple, from: 12, to: 11)
-
-        service = BuildGameState.new(game)
-        service.call
-
-        expect(service.errors).to eq ["You can only move diagonally!", "You can only move forward!", "That square is occupied!"]
       end
     end
   end

@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+
+@font-face {
+  font-family: 'DejaVuSans';
+  src: url(font-path('DejaVuSans.ttf')) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'DejaVuSans', sans-serif;
+}

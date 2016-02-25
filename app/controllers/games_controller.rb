@@ -15,5 +15,11 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
+    service = BuildGameState.new(@game)
+    @game_state = service.call
+
+    if service.errors.present?
+      flash.alert ? flash.alert += service.errors : flash.alert = service.errors
+    end
   end
 end

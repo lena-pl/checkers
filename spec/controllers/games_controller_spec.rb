@@ -34,10 +34,20 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "GET show" do
+    before do
+      allow_any_instance_of(BuildGameState).to receive(:errors).and_return(["Errors!"])
+    end
+
     it "assigns @game" do
       get :show, id: game.id
 
       expect(assigns(:game)).to eq game
+    end
+
+    it 'returns the correct errors bubbled up to build game state' do
+      get :show, id: game.id
+
+      expect(flash.alert).to eq ["Errors!"]
     end
 
     it "renders the show game template" do

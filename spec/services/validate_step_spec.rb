@@ -14,7 +14,7 @@ RSpec.describe ValidateStep do
         let(:step) { player_one.steps.create!(kind: :simple, from: 12, to: 16) }
 
         it "returns true" do
-          service = ValidateStep.new(board, step)
+          service = ValidateStep.new(board, player_one, step)
 
           expect(service.call).to eq true
           expect(service.errors).to be_empty
@@ -25,7 +25,7 @@ RSpec.describe ValidateStep do
         let(:step) { player_one.steps.create!(kind: :simple, from: 12, to: 8) }
 
         it "returns correct errors and false" do
-          service = ValidateStep.new(board, step)
+          service = ValidateStep.new(board, player_one, step)
 
           expect(service.call).to eq false
           expect(service.errors).to eq ["You can only move forward!", "That square is occupied!"]
@@ -38,7 +38,7 @@ RSpec.describe ValidateStep do
         let(:step) { player_two.steps.create!(kind: :jump, from: 24, to: 15) }
 
         it "returns true" do
-          service = ValidateStep.new(board, step)
+          service = ValidateStep.new(board, player_two, step)
 
           expect(service.call).to eq true
           expect(service.errors).to be_empty
@@ -49,7 +49,7 @@ RSpec.describe ValidateStep do
         let(:step) { player_one.steps.create!(kind: :jump, from: 12, to: 19) }
 
         it "returns errors and false" do
-          service = ValidateStep.new(board, step)
+          service = ValidateStep.new(board, player_one, step)
 
           expect(service.call).to eq false
           expect(service.errors).to eq ["That is not a valid jump path!"]
@@ -68,11 +68,22 @@ RSpec.describe ValidateStep do
         it "returns true" do
           ApplyStep.new(board, crowning_step).call
 
-          service = ValidateStep.new(board, step)
+          service = ValidateStep.new(board, player_one, step)
 
           expect(service.call).to eq true
           expect(service.errors).to be_empty
         end
+      end
+    end
+
+    context "when the player tries to move a piece that does not belong to them" do
+      let(:step) { player_one.steps.create!(kind: :jump, from: 24, to: 19) }
+
+      it 'returns the correct errors' do
+        service = ValidateStep.new(board, player_one, step)
+        service.call
+
+        expect(service.errors).to eq ["That square doesn't hold one of your pieces!"]
       end
     end
   end

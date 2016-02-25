@@ -1,20 +1,27 @@
 class ValidateStep
-  attr_reader :errors, :board, :step
+  attr_reader :errors, :board, :player, :step
 
-  delegate :player, :from, :to, to: :step
+  delegate :from, :to, to: :step
   delegate :enemy_colour, to: :player
 
-  def initialize(board, step)
-    @step = step
+  def initialize(board, player, step)
     @board = board
+    @player = player
+    @step = step
     @errors = []
   end
 
   def call
-    step.simple? ? can_complete_simple_move? : can_complete_jump_move?
+    piece_belongs_to_player? && (step.simple? ? can_complete_simple_move? : can_complete_jump_move?)
   end
 
   private
+
+  def piece_belongs_to_player?
+    errors.push "That square doesn't hold one of your pieces!" if board.square_occupant(from).colour != player.colour
+
+    errors.empty?
+  end
 
   def can_complete_simple_move?
     errors.push "You can only move diagonally!" if !squares_adjacent?
@@ -47,6 +54,6 @@ class ValidateStep
   end
 
   def correct_direction?
-    (board.square_occupant(from).rank == "king") || (player.red? ? from < to : from > to)
+    (board.square_occupant(from).rank == "king") || (step.player.red? ? from < to : from > to)
   end
 end

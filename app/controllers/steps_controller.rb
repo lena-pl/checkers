@@ -8,20 +8,16 @@ class StepsController < ApplicationController
     from = params[:step][:from].to_i
     to = params[:step][:to].to_i
 
-    if board.square_occupant(from).colour == player.colour
-      Step.transaction do
-        step = player.steps.new(kind: step_kind(board, from, to), from: from, to: to)
+    Step.transaction do
+      step = player.steps.new(kind: step_kind(board, from, to), from: from, to: to)
 
-        validator = ValidateStep.new(board, step)
+      validator = ValidateStep.new(board, player, step)
 
-        if validator.call
-          step.save!
-        end
-
-        flash.alert = validator.errors if validator.errors.present?
+      if validator.call
+        step.save!
       end
-    else
-      flash.alert = ["That square doesn't hold one of your pieces!"]
+
+      flash.alert = validator.errors if validator.errors.present?
     end
 
     redirect_to game_path(game)

@@ -1,8 +1,5 @@
 <h1>Game <%= @game.id %></h1>
 
-<p>Player 1 ID: <%= @game.players.first.id %></p>
-<p>Player 2 ID: <%= @game.players.second.id %></p>
-
 <% if flash.alert %>
   <% flash.alert.each do |message| %>
     <div class="alert"><%= message %></div>
@@ -14,7 +11,7 @@
   <p>Winner: Player <%= @game_state.winner == @game.players.first ? "1" : "2" %></p>
   <p>Loser: Player <%= @game_state.loser == @game.players.first ? "1" : "2" %></p>
 <% else %>
-  <h2>Board</h2>
+  <h2>Board:</h2>
   <% @game_state.board.layout.in_groups_of(4).each_with_index do |row, index| %>
     <div>
       <% row_index = index + 1 %>

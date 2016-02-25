@@ -109,7 +109,7 @@ RSpec.describe TakeTurn do
             service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
             service.call
 
-            expect(service.errors).to eq ["You must make all available jumps to complete your turn"]
+            expect(service.errors).to eq ["You still have more jumps available! Complete the path to end your turn."]
             expect(service.game_state.current_player).to eq player_two
             expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
               .r.r.r.r

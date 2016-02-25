@@ -21,9 +21,9 @@
       <% row.each do |square| %>
         <% if row_index % 2 != 0 %>
           <div class="square empty">&nbsp;<br>&nbsp;</div>
-          <div class="square"><%= square.position %><br><%= square.occupant != "empty" ?   display_draught_man_entity(square.occupant) : "&nbsp;".html_safe %></div>
+          <div class="square"><%= square.position %><br><%= !square.occupant.nil? ?   display_draught_man_entity(square.occupant) : "&nbsp;".html_safe %></div>
         <% elsif row_index % 2 == 0 %>
-          <div class="square"><%= square.position %><br><%= square.occupant != "empty" ? display_draught_man_entity(square.occupant) : "&nbsp;".html_safe %></div>
+          <div class="square"><%= square.position %><br><%= !square.occupant.nil? ? display_draught_man_entity(square.occupant) : "&nbsp;".html_safe %></div>
           <div class="square empty">&nbsp;<br>&nbsp;</div>
         <% end %>
       <% end %>
@@ -32,14 +32,14 @@
 
   <p>Player <%= @game_state.current_player == @game.players.first ? "1" : "2" %> turn:</p>
   <%= form_for [@game, @game_state.current_player, @game_state.current_player.steps.new] do |f| %>
-    <% owned_pieces = @game_state.board.layout.map { |square| square if square.occupant == @game_state.current_player.colour }.compact %>
-    <% destinations = @game_state.board.layout.map { |square| square if square.occupant != @game_state.current_player.colour }.compact %>
+    <% owned_pieces = @game_state.board.layout.map { |square| square if !square.occupant.nil? && (square.occupant.colour == @game_state.current_player.colour) }.compact %>
+    <% destinations = @game_state.board.layout.map { |square| square if (square.occupant.nil? || (square.occupant.colour != @game_state.current_player.colour)) }.compact %>
 
     From:
-    <%= f.select :from, options_for_select(owned_pieces.collect {|square| [ "#{square.position} #{square.occupant}", square.position ] }) %>
+    <%= f.select :from, options_for_select(owned_pieces.collect {|square| [ square.position, square.position ] }) %>
 
     To:
-    <%= f.select :to, options_for_select(destinations.collect {|square| [ "#{square.position} #{square.occupant}", square.position ] }) %>
+    <%= f.select :to, options_for_select(destinations.collect {|square| [ square.position, square.position ] }) %>
 
     <%= f.submit "Take Step" %>
   <% end %>

@@ -13,7 +13,7 @@ class TakeTurn
     if player_allowed_to_move? && steps.any?
       board = apply_steps
 
-      errors.push "You must make all available jumps to complete your turn" if steps.last.jump? && more_pieces_can_be_captured?
+      errors.push "You still have more jumps available! Complete the path to end your turn." if steps.last.jump? && more_pieces_can_be_captured?
 
       find_next_player if errors.empty?
     else

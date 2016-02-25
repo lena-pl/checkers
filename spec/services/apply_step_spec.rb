@@ -19,7 +19,7 @@ RSpec.describe ApplyStep do
         service = ApplyStep.new(board, step)
         service.call
 
-        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.gsub(/^ {10}/, '')
+        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.strip_heredoc
           .r.r.r.r
           r.r.r.r.
           .r.r.r._
@@ -41,7 +41,7 @@ RSpec.describe ApplyStep do
         service = ApplyStep.new(board, step)
         service.call
 
-        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.gsub(/^ {10}/, '')
+        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.strip_heredoc
           .r.r.r.r
           r.r.r.r.
           .r.r.r._

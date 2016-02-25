@@ -12,7 +12,7 @@ RSpec.describe ConstructBoard do
 
   describe "#call" do
     it "returns an array of square structs with correct positions, connections and occupants" do
-      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.gsub(/^ {8}/, '')
+      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.strip_heredoc
         .r.r.r.r
         r.r.r.r.
         .r.r.r.r

@@ -31,7 +31,7 @@ RSpec.describe TakeTurn do
 
           expect(service.errors).to be_empty
           expect(service.game_state.current_player).to eq player_two
-          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.gsub(/^ {12}/, '')
+          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
             .r.r.r.r
             r.r.r.r.
             .r.r.r._
@@ -60,7 +60,7 @@ RSpec.describe TakeTurn do
 
           expect(service.errors).to be_empty
           expect(service.game_state.current_player).to eq player_one
-          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.gsub(/^ {12}/, '')
+          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
             .r.r.r.r
             r.r.r.r.
             .r._._._
@@ -89,7 +89,7 @@ RSpec.describe TakeTurn do
 
             expect(service.errors).to be_empty
             expect(service.game_state.current_player).to eq player_one
-            expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.gsub(/^ {14}/, '')
+            expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
               .r.r.r.r
               r.r.r.w.
               .r.r._.r
@@ -111,7 +111,7 @@ RSpec.describe TakeTurn do
 
             expect(service.errors).to eq ["You must make all available jumps to complete your turn"]
             expect(service.game_state.current_player).to eq player_two
-            expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.gsub(/^ {14}/, '')
+            expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
               .r.r.r.r
               r.r.r._.
               .r.r.r.r

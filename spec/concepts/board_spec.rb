@@ -12,7 +12,7 @@ RSpec.describe Board do
 
   describe "#layout" do
     it "returns an array of square structs with correct positions, connections and occupants" do
-      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.gsub(/^ {8}/, '')
+      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.strip_heredoc
         .r.r.r.r
         r.r.r.r.
         .r.r.r.r
@@ -103,7 +103,7 @@ RSpec.describe Board do
 
       expect(subject.square_occupant(10)).to eq nil
 
-      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.gsub(/^ {8}/, '')
+      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.strip_heredoc
         .r.r.r.r
         r.r.r.r.
         .r._.r.r
@@ -125,7 +125,7 @@ RSpec.describe Board do
       expect(subject.square_occupant(10)).to eq nil
       expect(subject.square_occupant(15)).to eq square_ten.occupant
 
-      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.gsub(/^ {8}/, '')
+      expect(board_layout_as_string(subject.layout)).to eql <<-BOARD.strip_heredoc
         .r.r.r.r
         r.r.r.r.
         .r._.r.r

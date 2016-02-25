@@ -124,6 +124,47 @@ RSpec.describe TakeTurn do
           end
         end
       end
+
+      context "when multiple jumps are available, but the piece has been crowned during the turn" do
+        before do
+          player_one.steps.create!(kind: :simple, from: 12, to: 16)
+          player_two.steps.create!(kind: :simple, from: 21, to: 17)
+
+          player_one.steps.create!(kind: :simple, from: 8, to: 12)
+          player_two.steps.create!(kind: :simple, from: 17, to: 14)
+
+          player_one.steps.create!(kind: :simple, from: 3, to: 8)
+          player_two.steps.create!(kind: :simple, from: 22, to: 17)
+
+          player_one.steps.create!(kind: :simple, from: 10, to: 15)
+          player_two.steps.create!(kind: :simple, from: 14, to: 10)
+
+          player_one.steps.create!(kind: :simple, from: 16, to: 20)
+          player_two.steps.create!(kind: :simple, from: 26, to: 22)
+
+          player_one.steps.create!(kind: :simple, from: 12, to: 16)
+        end
+
+        let(:steps) { [player_two.steps.create!(kind: :jump, from: 10, to: 3)] }
+
+        it "hands the turn over to the other player immediately after crowning" do
+          service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
+          service.call
+
+          expect(service.errors).to be_empty
+          expect(service.game_state.current_player).to eq player_one
+          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
+            .r.r.W.r
+            r.r._.r.
+            .r._.r._
+            _._.r.r.
+            .w._._.r
+            _.w.w.w.
+            .w._.w.w
+            w.w.w.w.
+          BOARD
+        end
+      end
     end
 
     context "when the player is not allowed to move" do

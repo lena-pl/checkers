@@ -20,16 +20,16 @@ class AvailableTurns
   private
 
   def more_pieces_can_be_captured?
-    if adjacent_enemies.any?
-      empty_destinations.any?
-    else
-      false
-    end
+    adjacent_enemies.any? && empty_destinations.any?
   end
 
   def forward_facing_adjacent_piece_positions(position)
-    board.square_connections(position).select do |connection|
-      player.red? ? connection > piece_position : connection < piece_position
+    if board.square_occupant(position).nil? || (board.square_occupant(position).rank == "king")
+      board.square_connections(position)
+    else board.square_occupant(position).rank == "man"
+      board.square_connections(position).select do |connection|
+        player.red? ? connection > piece_position : connection < piece_position
+      end
     end
   end
 

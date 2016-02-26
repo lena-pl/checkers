@@ -157,6 +157,44 @@ RSpec.describe TakeTurn do
         end
       end
 
+      context "when a piece jumps into a row adjacent to the edge of the board and has an adjacent enemy ahead" do
+        before do
+          player_one.steps.create!(kind: :simple, from: 11, to: 15)
+          player_two.steps.create!(kind: :simple, from: 23, to: 18)
+
+          player_one.steps.create!(kind: :simple, from: 15, to: 19)
+          player_two.steps.create!(kind: :simple, from: 27, to: 23)
+
+          player_one.steps.create!(kind: :simple, from: 10, to: 15)
+          player_two.steps.create!(kind: :simple, from: 18, to: 14)
+
+          player_one.steps.create!(kind: :simple, from: 15, to: 18)
+          player_two.steps.create!(kind: :simple, from: 14, to: 10)
+
+          player_one.steps.create!(kind: :jump, from: 18, to: 27)
+        end
+
+        let(:steps) { [player_two.steps.create!(kind: :jump, from: 32, to: 23), player_two.steps.create!(kind: :jump, from: 23, to: 16)] }
+
+        it "completes the turn and finds the next player" do
+          service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
+          service.call
+
+          expect(service.errors).to be_empty
+          expect(service.game_state.current_player).to eq player_one
+          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
+            .r.r.r.r
+            r.r.r.r.
+            .r.w._.r
+            _._._.w.
+            ._._._._
+            w.w._.w.
+            .w.w._.w
+            w.w.w._.
+          BOARD
+        end
+      end
+
       context "when multiple jumps are available, but the piece has been crowned during the turn" do
         before do
           player_one.steps.create!(kind: :simple, from: 12, to: 16)

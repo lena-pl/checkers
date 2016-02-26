@@ -47,19 +47,24 @@ class AvailableTurns
 
   def empty_destinations
     potential_destinations = enemies_with_directions.map do |enemy, direction|
-      positions = forward_facing_adjacent_piece_positions(enemy)
+      children = forward_facing_adjacent_piece_positions(enemy)
 
-      in_horizontal_direction(direction, positions)
+      in_horizontal_direction(direction, enemy, children)
     end
 
-    potential_destinations.compact.select do |position|
+    potential_destinations.flatten.compact.select do |position|
       board.square_occupant(position).nil?
     end
   end
 
-  def in_horizontal_direction(direction, positions)
-    positions.sort
+  def in_horizontal_direction(direction, enemy, children)
+    children.sort
 
-    direction == "right" ? positions.last : positions.first
+    if children.count > 1
+      direction == "right" ? children.last : children.first
+    elsif children.count == 1
+      child_direction = (children.first < enemy ? "left" : "right")
+      child_direction == direction ? children : nil
+    end
   end
 end

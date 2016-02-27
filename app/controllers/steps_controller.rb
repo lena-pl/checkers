@@ -16,6 +16,8 @@ class StepsController < ApplicationController
 
       if available_destinations.include? to
         step.save!
+      else
+        flash.alert = ["That's not a valid move!"]
       end
 
       flash.alert = service.errors if service.errors.present?

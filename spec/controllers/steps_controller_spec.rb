@@ -33,6 +33,12 @@ RSpec.describe StepsController, type: :controller do
         expect(game.steps).to be_empty
       end
 
+      it 'returns correct errors' do
+        post :create, game_id: game, player_id: player_two.id, step: {from: 12, to: 8}
+
+        expect(flash.alert).to eq ["That's not a valid move!"]
+      end
+
       it 'redirects to show' do
         post :create, game_id: game, player_id: player_one.id, step: {from: 12, to: 8}
 
@@ -77,6 +83,12 @@ RSpec.describe StepsController, type: :controller do
         post :create, game_id: game, player_id: player_two.id, step: {from: 19, to: 12}
 
         expect(game.steps.count).to eq 3
+      end
+
+      it 'returns correct errors' do
+        post :create, game_id: game, player_id: player_two.id, step: {from: 19, to: 12}
+
+        expect(flash.alert).to eq ["That's not a valid move!"]
       end
 
       it 'redirects to show' do

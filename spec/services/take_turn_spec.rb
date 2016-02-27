@@ -249,5 +249,51 @@ RSpec.describe TakeTurn do
         expect(service.game_state).to eq base_game_state
       end
     end
+
+    context "when a piece reaches king's row during the most recent step of the turn" do
+      before do
+        player_one.steps.create!(kind: :simple, from: 12, to: 16)
+        player_two.steps.create!(kind: :simple, from: 23, to: 18)
+
+        player_one.steps.create!(kind: :simple, from: 16, to: 19)
+        player_two.steps.create!(kind: :simple, from: 18, to: 14)
+
+        player_one.steps.create!(kind: :simple, from: 11, to: 15)
+        player_two.steps.create!(kind: :simple, from: 27, to: 23)
+
+        player_one.steps.create!(kind: :simple, from: 9, to: 13)
+        player_two.steps.create!(kind: :simple, from: 32, to: 27)
+
+        player_one.steps.create!(kind: :jump, from: 10, to: 17)
+        player_two.steps.create!(kind: :simple, from: 23, to: 18)
+
+        player_one.steps.create!(kind: :simple, from: 8, to: 12)
+        player_two.steps.create!(kind: :simple, from: 18, to: 14)
+
+        player_one.steps.create!(kind: :simple, from: 19, to: 23)
+        player_two.steps.create!(kind: :simple, from: 14, to: 9)
+      end
+
+      let(:steps) { [player_one.steps.create!(kind: :jump, from: 23, to: 32)] }
+
+      it "gets the board to crown the piece" do
+        service = TakeTurn.new(game_state: base_game_state, player: player_one, steps: steps)
+        service.call
+
+        expect(service.errors).to be_empty
+        expect(service.game_state.current_player).to eq player_two
+        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.strip_heredoc
+          .r.r.r.r
+          r.r.r._.
+          .w._._.r
+          r._.r._.
+          .r._._._
+          w.w._.w.
+          .w.w._.w
+          w.w.w.R.
+        BOARD
+        expect(service.board.square_occupant(steps.last.to).rank).to eq "king"
+      end
+    end
   end
 end

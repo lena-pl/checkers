@@ -27,12 +27,6 @@ RSpec.describe StepsController, type: :controller do
     end
 
     context 'when an invalid simple step is being made' do
-      it 'returns the correct errors' do
-        post :create, game_id: game, player_id: player_one.id, step: {from: 12, to: 8}
-
-        expect(flash.alert).to eq ["You can only move forward!", "That square is occupied!"]
-      end
-
       it 'does not apply the step' do
         post :create, game_id: game, player_id: player_one.id, step: {from: 12, to: 8}
 
@@ -77,12 +71,6 @@ RSpec.describe StepsController, type: :controller do
         player_one.steps.create!(kind: :simple, from: 12, to: 16)
         player_two.steps.create!(kind: :simple, from: 24, to: 19)
         player_one.steps.create!(kind: :simple, from: 8, to: 12)
-      end
-
-      it 'returns the correct errors' do
-        post :create, game_id: game, player_id: player_two.id, step: {from: 19, to: 12}
-
-        expect(flash.alert).to eq ["That is not a valid jump path!"]
       end
 
       it 'does not apply the step' do

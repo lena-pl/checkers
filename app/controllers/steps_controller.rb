@@ -11,13 +11,14 @@ class StepsController < ApplicationController
     Step.transaction do
       step = player.steps.new(kind: step_kind(board, from, to), from: from, to: to)
 
-      validator = ValidateStep.new(board, player, step)
+      service = AvailableDestinations.new(board, player, from)
+      available_destinations = service.call
 
-      if validator.call
+      if available_destinations.include? to
         step.save!
       end
 
-      flash.alert = validator.errors if validator.errors.present?
+      flash.alert = service.errors if service.errors.present?
     end
 
     redirect_to game_path(game)

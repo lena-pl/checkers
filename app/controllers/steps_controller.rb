@@ -29,7 +29,7 @@ class StepsController < ApplicationController
   private
 
   def step_kind(board, from, to)
-    if board.square_connections(from).include? to
+    if board.square_simple_connections(from).include? to
       :simple
     else
       :jump

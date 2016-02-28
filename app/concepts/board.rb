@@ -13,12 +13,12 @@ class Board
     square_by_position(position).occupant
   end
 
-  def square_connections(position)
-    square_by_position(position).connections
+  def square_simple_connections(position)
+    square_by_position(position).simple_connections
   end
 
   def shared_piece_position(from, to)
-    (square_connections(from) & square_connections(to)).first
+    (square_simple_connections(from) & square_simple_connections(to)).first
   end
 
   def player_pieces(player)

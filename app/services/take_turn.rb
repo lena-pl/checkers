@@ -51,7 +51,7 @@ class TakeTurn
     position = steps.last.to
     potential_destinations = AvailableDestinations.new(board, player, position).call
 
-    jump_destinations = potential_destinations - (board.square_connections(position) & potential_destinations)
+    jump_destinations = potential_destinations - (board.square_simple_connections(position) & potential_destinations)
 
     jump_destinations.any?
   end

@@ -45,7 +45,7 @@ class AvailableDestinations
   end
 
   def squares_adjacent?(to)
-    board.square_connections(position).include? to
+    board.square_simple_connections(position).include? to
   end
 
   def valid_jump_path?(to)

@@ -17,6 +17,10 @@ class Board
     square_by_position(position).simple_connections
   end
 
+  def square_jump_connections(position)
+    square_by_position(position).jump_connections
+  end
+
   def shared_piece_position(from, to)
     (square_simple_connections(from) & square_simple_connections(to)).first
   end

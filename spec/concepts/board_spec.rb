@@ -68,11 +68,19 @@ RSpec.describe Board do
     end
   end
 
-  describe "#square_connections" do
+  describe "#square_simple_connections" do
     it "returns the correct square connections, given a checker board position" do
       square_four = square(4, "red", [8], [11])
 
       expect(subject.square_simple_connections(4)).to eq square_four.simple_connections
+    end
+  end
+
+  describe "#square_jump_connections" do
+    it "returns the correct square connections, given a checker board position" do
+      square_four = square(4, "red", [8], [11])
+
+      expect(subject.square_jump_connections(4)).to eq square_four.jump_connections
     end
   end
 

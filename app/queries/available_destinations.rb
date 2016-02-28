@@ -52,7 +52,8 @@ class AvailableDestinations
     board.shared_piece_position(position, to).present? &&
       !board.square_occupant(board.shared_piece_position(position, to)).nil? &&
         board.square_occupant(board.shared_piece_position(position, to)).colour == enemy_colour &&
-         board.square_occupant(to).nil?
+         board.square_occupant(to).nil? &&
+          board.square_jump_connections(position).include?(to)
   end
 
   def correct_direction?(to)

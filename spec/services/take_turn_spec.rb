@@ -125,6 +125,48 @@ RSpec.describe TakeTurn do
         end
       end
 
+      context "when a piece is at the end of a jump path, has an adjacent enemy and an empty square in the wrong horizontal direction" do
+        before do
+          player_one.steps.create!(kind: :simple, from: 11, to: 16)
+          player_two.steps.create!(kind: :simple, from: 21, to: 17)
+
+          player_one.steps.create!(kind: :simple, from: 7, to: 11)
+          player_two.steps.create!(kind: :simple, from: 17, to: 14)
+
+          player_one.steps.create!(kind: :simple, from: 9, to: 13)
+          player_two.steps.create!(kind: :simple, from: 14, to: 7)
+
+          player_one.steps.create!(kind: :simple, from: 16, to: 19)
+          player_two.steps.create!(kind: :simple, from: 22, to: 17)
+
+          player_one.steps.create!(kind: :simple, from: 5, to: 9)
+          player_two.steps.create!(kind: :simple, from: 17, to: 14)
+
+          player_one.steps.create!(kind: :simple, from: 1, to: 5)
+          player_two.steps.create!(kind: :simple, from: 25, to: 21)
+        end
+
+        let(:steps) { [player_one.steps.create!(kind: :jump, from: 3, to: 10), player_one.steps.create!(kind: :jump, from: 10, to: 17)] }
+
+        it "completes the turn and hands over to the other player" do
+          service = TakeTurn.new(game_state: base_game_state, player: player_one, steps: steps)
+          service.call
+
+          expect(service.errors).to be_empty
+          expect(service.game_state.current_player).to eq player_two
+          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
+            ._.r._.r
+            r.r._.r.
+            .r._.r.r
+            r._._._.
+            .r._.r._
+            w._.w.w.
+            ._.w.w.w
+            w.w.w.w.
+          BOARD
+        end
+      end
+
       context "when the player jumps onto the row immediately preceeding king's row and there is an adjacent enemy ahead" do
         before do
           player_one.steps.create!(kind: :simple, from: 12, to: 16)

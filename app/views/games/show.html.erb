@@ -1,7 +1,7 @@
 <h1>Game <%= @game.id %></h1>
 
-<% if flash.alert %>
-  <% flash.alert.each do |message| %>
+<% if @errors.any? %>
+  <% @errors.each do |message| %>
     <div class="alert"><%= message %></div>
   <% end %>
 <% end %>

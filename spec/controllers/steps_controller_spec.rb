@@ -41,7 +41,7 @@ RSpec.describe StepsController, type: :controller do
         it "does not return errors" do
           post :create, game_id: game, player_id: player_one.id, step: {from: 10, to: 17}
 
-          expect(flash.alert).to be_nil
+          expect(flash.alert).to be_empty
         end
       end
     end
@@ -50,7 +50,7 @@ RSpec.describe StepsController, type: :controller do
       it 'does not return errors' do
         post :create, game_id: game, player_id: player_one.id, step: {from: 12, to: 16}
 
-        expect(flash.alert).to be_nil
+        expect(flash.alert).to be_empty
       end
 
       it 'applies the step' do
@@ -96,7 +96,7 @@ RSpec.describe StepsController, type: :controller do
       it 'does not return errors' do
         post :create, game_id: game, player_id: player_two.id, step: {from: 19, to: 12}
 
-        expect(flash.alert).to be_nil
+        expect(flash.alert).to be_empty
       end
 
       it 'applies the step' do

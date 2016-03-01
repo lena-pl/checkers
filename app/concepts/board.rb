@@ -1,11 +1,15 @@
 class Board
-  attr_reader :squares, :layout
+  attr_reader :positions_and_occupants, :layout
+
+  ORIGINAL_RED_PIECE_POSITIONS_32_SQUARE_BOARD = (1..12).to_a
+  ORIGINAL_EMPTY_SQUARE_POSITIONS_32_SQUARE_BOARD = (13..20).to_a
+  ORIGINAL_WHITE_PIECE_POSITIONS_32_SQUARE_BOARD = (21..32).to_a
 
   RED_PLAYER_KINGS_ROW_32_SQUARE_BOARD = [29, 30, 31, 32]
   WHITE_PLAYER_KINGS_ROW_32_SQUARE_BOARD = [1, 2, 3, 4]
 
-  def initialize(squares)
-    @squares = squares
+  def initialize(positions_and_occupants = default_positions_and_occupants)
+    @positions_and_occupants = positions_and_occupants
     @layout = original_layout
   end
 
@@ -73,10 +77,18 @@ class Board
   private
 
   def original_layout
-    ConstructBoard.new(squares).call
+    ConstructBoard.new(positions_and_occupants).call
   end
 
   def square_by_position(pos)
     layout.find { |square| square.position == pos }
+  end
+
+  def default_positions_and_occupants
+    red_occupied = ORIGINAL_RED_PIECE_POSITIONS_32_SQUARE_BOARD.map { |number| [number, "red"]  }
+    empty = ORIGINAL_EMPTY_SQUARE_POSITIONS_32_SQUARE_BOARD.map { |number| [number, "empty"]  }
+    white_occupied = ORIGINAL_WHITE_PIECE_POSITIONS_32_SQUARE_BOARD.map { |number| [number, "white"]  }
+
+    red_occupied + empty + white_occupied
   end
 end

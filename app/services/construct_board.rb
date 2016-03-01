@@ -16,8 +16,8 @@ class ConstructBoard
   Square = Struct.new(:position, :occupant, :simple_connections, :jump_connections)
   Piece = Struct.new(:rank, :colour)
 
-  def initialize(squares)
-    @squares = squares
+  def initialize(positions_and_occupants)
+    @positions_and_occupants = positions_and_occupants
   end
 
   def call
@@ -63,7 +63,7 @@ class ConstructBoard
   end
 
   def squares_with_simple_connections
-    top_half_connected = @squares.zip(top_to_bottom_simple_connections)
+    top_half_connected = @positions_and_occupants.zip(top_to_bottom_simple_connections)
     flat_top_half_connected = top_half_connected.map {|(position, occupant_colour), connection| [position, occupant_colour, connection]}
 
     bottom_half_connected = flat_top_half_connected.reverse.zip(bottom_to_top_simple_connections)

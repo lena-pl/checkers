@@ -14,7 +14,13 @@ class StepsController < ApplicationController
       service = AvailableDestinations.new(board, player, from)
       available_destinations = service.call
 
-      if available_destinations.include? to
+      if mid_jump_path?(game, player)
+        if (available_destinations.include? to) && (board.square_jump_connections(from).include? to)
+          step.save!
+        else
+          flash.alert = ["That's not a valid move!"]
+        end
+      elsif available_destinations.include? to
         step.save!
       else
         flash.alert = ["That's not a valid move!"]
@@ -34,5 +40,9 @@ class StepsController < ApplicationController
     else
       :jump
     end
+  end
+
+  def mid_jump_path?(game, player)
+    game.steps.any? && (game.steps.last.player == player) && (player.steps.ordered.last.jump?)
   end
 end

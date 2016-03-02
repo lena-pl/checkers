@@ -18,7 +18,9 @@ class MakeMove
 
       available_destinations = available_destinations_service.call
 
-      if mid_jump_path?
+      if !piece_belongs_to_player?
+        @errors = ["That square doesn't hold one of your pieces!"]
+      elsif mid_jump_path?
         if (available_destinations.include? to) && (board.square_jump_connections(from).include? to)
           step.save!
         else
@@ -48,5 +50,9 @@ class MakeMove
 
   def mid_jump_path?
     game.steps.any? && (game.steps.last.player == player) && (player.steps.ordered.last.jump?)
+  end
+
+  def piece_belongs_to_player?
+    board.square_occupant(from) && (board.square_occupant(from).colour == player.colour)
   end
 end

@@ -49,7 +49,7 @@ class MakeMove
   end
 
   def mid_jump_path?
-    game.steps.any? && (game.steps.last.player == player) && (player.steps.ordered.last.jump?)
+    game.steps.any? && (game.steps.ordered.last.player == player) && (player.steps.ordered.last.jump?)
   end
 
   def piece_belongs_to_player?

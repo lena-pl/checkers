@@ -25,3 +25,5 @@ There are 2 piece classes in checkers: men and kings.
 Winning/Losing
 ---
 A player wins when their opponent has no more pieces or legal moves left. The game may end in a draw if no more legal moves are available to either player or both mutually decide on a draw.
+
+Copyright (c) Powershop 2016

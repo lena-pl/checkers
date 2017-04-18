@@ -8,28 +8,11 @@ class StepsController < ApplicationController
     from = params[:step][:from].to_i
     to = params[:step][:to].to_i
 
-    Step.transaction do
-      step = player.steps.new(kind: step_kind(board, from, to), from: from, to: to)
+    move_maker = MakeMove.new(game, player, board, from, to)
+    move_maker.call
 
-      validator = ValidateStep.new(board, player, step)
-
-      if validator.call
-        step.save!
-      end
-
-      flash.alert = validator.errors if validator.errors.present?
-    end
+    flash.alert = move_maker.errors
 
     redirect_to game_path(game)
-  end
-
-  private
-
-  def step_kind(board, from, to)
-    if board.square_connections(from).include? to
-      :simple
-    else
-      :jump
-    end
   end
 end

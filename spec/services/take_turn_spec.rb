@@ -125,6 +125,48 @@ RSpec.describe TakeTurn do
         end
       end
 
+      context "when a piece is at the end of a jump path, has an adjacent enemy and an empty square in the wrong horizontal direction" do
+        before do
+          player_one.steps.create!(kind: :simple, from: 11, to: 16)
+          player_two.steps.create!(kind: :simple, from: 21, to: 17)
+
+          player_one.steps.create!(kind: :simple, from: 7, to: 11)
+          player_two.steps.create!(kind: :simple, from: 17, to: 14)
+
+          player_one.steps.create!(kind: :simple, from: 9, to: 13)
+          player_two.steps.create!(kind: :simple, from: 14, to: 7)
+
+          player_one.steps.create!(kind: :simple, from: 16, to: 19)
+          player_two.steps.create!(kind: :simple, from: 22, to: 17)
+
+          player_one.steps.create!(kind: :simple, from: 5, to: 9)
+          player_two.steps.create!(kind: :simple, from: 17, to: 14)
+
+          player_one.steps.create!(kind: :simple, from: 1, to: 5)
+          player_two.steps.create!(kind: :simple, from: 25, to: 21)
+        end
+
+        let(:steps) { [player_one.steps.create!(kind: :jump, from: 3, to: 10), player_one.steps.create!(kind: :jump, from: 10, to: 17)] }
+
+        it "completes the turn and hands over to the other player" do
+          service = TakeTurn.new(game_state: base_game_state, player: player_one, steps: steps)
+          service.call
+
+          expect(service.errors).to be_empty
+          expect(service.game_state.current_player).to eq player_two
+          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
+            ._.r._.r
+            r.r._.r.
+            .r._.r.r
+            r._._._.
+            .r._.r._
+            w._.w.w.
+            ._.w.w.w
+            w.w.w.w.
+          BOARD
+        end
+      end
+
       context "when the player jumps onto the row immediately preceeding king's row and there is an adjacent enemy ahead" do
         before do
           player_one.steps.create!(kind: :simple, from: 12, to: 16)
@@ -153,6 +195,44 @@ RSpec.describe TakeTurn do
             w.w._.w.
             .w.w.w.w
             w.w.w.w.
+          BOARD
+        end
+      end
+
+      context "when a piece jumps into a row adjacent to the edge of the board and has an adjacent enemy ahead" do
+        before do
+          player_one.steps.create!(kind: :simple, from: 11, to: 15)
+          player_two.steps.create!(kind: :simple, from: 23, to: 18)
+
+          player_one.steps.create!(kind: :simple, from: 15, to: 19)
+          player_two.steps.create!(kind: :simple, from: 27, to: 23)
+
+          player_one.steps.create!(kind: :simple, from: 10, to: 15)
+          player_two.steps.create!(kind: :simple, from: 18, to: 14)
+
+          player_one.steps.create!(kind: :simple, from: 15, to: 18)
+          player_two.steps.create!(kind: :simple, from: 14, to: 10)
+
+          player_one.steps.create!(kind: :jump, from: 18, to: 27)
+        end
+
+        let(:steps) { [player_two.steps.create!(kind: :jump, from: 32, to: 23), player_two.steps.create!(kind: :jump, from: 23, to: 16)] }
+
+        it "completes the turn and finds the next player" do
+          service = TakeTurn.new(game_state: base_game_state, player: player_two, steps: steps)
+          service.call
+
+          expect(service.errors).to be_empty
+          expect(service.game_state.current_player).to eq player_one
+          expect(board_layout_as_string(service.game_state.board.layout)).to eql <<-BOARD.strip_heredoc
+            .r.r.r.r
+            r.r.r.r.
+            .r.w._.r
+            _._._.w.
+            ._._._._
+            w.w._.w.
+            .w.w._.w
+            w.w.w._.
           BOARD
         end
       end
@@ -209,6 +289,52 @@ RSpec.describe TakeTurn do
         expect(service.errors).to eq ["It's not your turn right now!"]
         expect(service.game_state.current_player).to eq player_one
         expect(service.game_state).to eq base_game_state
+      end
+    end
+
+    context "when a piece reaches king's row during the most recent step of the turn" do
+      before do
+        player_one.steps.create!(kind: :simple, from: 12, to: 16)
+        player_two.steps.create!(kind: :simple, from: 23, to: 18)
+
+        player_one.steps.create!(kind: :simple, from: 16, to: 19)
+        player_two.steps.create!(kind: :simple, from: 18, to: 14)
+
+        player_one.steps.create!(kind: :simple, from: 11, to: 15)
+        player_two.steps.create!(kind: :simple, from: 27, to: 23)
+
+        player_one.steps.create!(kind: :simple, from: 9, to: 13)
+        player_two.steps.create!(kind: :simple, from: 32, to: 27)
+
+        player_one.steps.create!(kind: :jump, from: 10, to: 17)
+        player_two.steps.create!(kind: :simple, from: 23, to: 18)
+
+        player_one.steps.create!(kind: :simple, from: 8, to: 12)
+        player_two.steps.create!(kind: :simple, from: 18, to: 14)
+
+        player_one.steps.create!(kind: :simple, from: 19, to: 23)
+        player_two.steps.create!(kind: :simple, from: 14, to: 9)
+      end
+
+      let(:steps) { [player_one.steps.create!(kind: :jump, from: 23, to: 32)] }
+
+      it "gets the board to crown the piece" do
+        service = TakeTurn.new(game_state: base_game_state, player: player_one, steps: steps)
+        service.call
+
+        expect(service.errors).to be_empty
+        expect(service.game_state.current_player).to eq player_two
+        expect(board_layout_as_string(service.board.layout)).to eql <<-BOARD.strip_heredoc
+          .r.r.r.r
+          r.r.r._.
+          .w._._.r
+          r._.r._.
+          .r._._._
+          w.w._.w.
+          .w.w._.w
+          w.w.w.R.
+        BOARD
+        expect(service.board.square_occupant(steps.last.to).rank).to eq "king"
       end
     end
   end

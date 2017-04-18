@@ -13,7 +13,9 @@ class TakeTurn
     if player_allowed_to_move? && steps.any?
       board = apply_steps
 
-      errors.push "You still have more jumps available! Complete the path to end your turn." if steps.last.jump? && more_pieces_can_be_captured?
+      errors.push "You still have more jumps available! Complete the path to end your turn." if steps.last.jump? && more_pieces_can_be_captured? && !piece_reached_kings_row?
+
+      board.crown_piece(steps.last.to) if piece_reached_kings_row?
 
       find_next_player if errors.empty?
     else
@@ -46,8 +48,15 @@ class TakeTurn
   end
 
   def more_pieces_can_be_captured?
-    current_destination = steps.last.to
+    position = steps.last.to
+    potential_destinations = AvailableDestinations.new(board, player, position).call
 
-    AvailableTurns.new(player: player, board: board, piece_position: current_destination).more_jump_moves_available?
+    jump_destinations = potential_destinations - (board.square_simple_connections(position) & potential_destinations)
+
+    jump_destinations.any?
+  end
+
+  def piece_reached_kings_row?
+    board.kings_row(player).include? steps.last.to
   end
 end

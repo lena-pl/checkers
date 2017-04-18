@@ -1,6 +1,6 @@
 module BoardHelpers
-  def square(position, occupant, connections)
-    ConstructBoard::Square.new(position, occupant != "empty" ? ConstructBoard::Piece.new("man", occupant) : nil, connections)
+  def square(position, occupant, simple_connections, jump_connections)
+    ConstructBoard::Square.new(position, occupant != "empty" ? ConstructBoard::Piece.new("man", occupant) : nil, simple_connections, jump_connections)
   end
 
   def board_layout_as_string(board_layout)

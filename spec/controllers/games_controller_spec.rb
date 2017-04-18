@@ -47,7 +47,7 @@ RSpec.describe GamesController, type: :controller do
     it 'returns the correct errors bubbled up to build game state' do
       get :show, id: game.id
 
-      expect(flash.alert).to eq ["Errors!"]
+      expect(assigns(:errors)).to eq ["Errors!"]
     end
 
     it "renders the show game template" do

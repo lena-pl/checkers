@@ -50,8 +50,7 @@ class GameState
 
   def legal_moves_left_for_player?(player)
     board.player_pieces(player).map do |piece|
-      check = AvailableTurns.new(player: player, board: board, piece_position: piece.position)
-      check.more_jump_moves_available? || check.more_simple_moves_available?
-    end.include? true
+      AvailableDestinations.new(board, player, piece.position).call
+    end.flatten.any?
   end
 end
